@@ -8,26 +8,26 @@ CC	= gcc
 
 FLAGS	= -Wall -Wextra -Werror
 
-INCLUDE	= -pthread -lpthread
+INC		= -lreadline
 
 HEADER	= minishell.h
 
 all:	$(NAME)
 
 %.o: %.c $(HEADER)
-	@$(CC) $(FLAGS) -c $<  -o $(<:.c=.o)
+	@$(CC) $(FLAGS) -c $< -o $(OBJS)
 
 $(NAME): $(OBJS)
-	@$(CC) $(INCLUDE) $(FLAGS) -o $(NAME) $(OBJS)
+	@$(CC) $(FLAGS)  $(INC) -o $(NAME) $(OBJS)
 	@echo "Compilation completed.\n./minishell is ready to use !"
 
 clean:
-	@rm -f $(OBJS) $(B_OBJS)
+	@rm -f $(OBJS)
 	@echo "All <file>.o are removed."
 
 fclean: clean
 	@rm -f $(NAME)
-	@echo "./philo is removed."
+	@echo "./minishell is removed."
 
 re: fclean all
 
