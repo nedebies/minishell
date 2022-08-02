@@ -1,7 +1,8 @@
 SRCS	=	main.c \
 			./parsing/parser.c \
 			./executer/exec.c \
-			./subsys/subsys.c
+			./subsys/subsys.c \
+			./lexer/lexer.c
 
 OBJS	= $(SRCS:.c=.o)
 

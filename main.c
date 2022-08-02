@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/02 14:32:30 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/02 15:09:18 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ int main(int ac, char **av, char **envp)
         //    ft_minishell(str, envp);
         ft_parser();
         exec();
-         subsys();
+        subsys();
+        lexer();
     }
     return (0);
 }
