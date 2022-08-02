@@ -1,28 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_lexer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/02 15:13:16 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/02 15:07:21 by nedebies          #+#    #+#             */
+/*   Updated: 2022/08/02 15:14:06 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "../minishell.h"
 
-#define GRN "\e[1;32m"
-# include <unistd.h>
-# include <stdlib.h>
-# include <fcntl.h>
-# include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-
-int ft_parser(void);
-int ft_executer(void);
-int ft_expander(void);
-int ft_lexer(void);
-#endif
+int ft_lexer(void)
+{
+    return (0);
+}
