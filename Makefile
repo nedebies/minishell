@@ -1,4 +1,7 @@
-SRCS	=	main.c 
+SRCS	=	main.c \
+			./parsing/parser.c \
+			./executer/exec.c \
+			./subsys/subsys.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -15,10 +18,10 @@ HEADER	= minishell.h
 all:	$(NAME)
 
 %.o: %.c $(HEADER)
-	@$(CC) $(FLAGS) -c $< -o $(OBJS)
+	@$(CC) $(FLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
-	@$(CC) $(FLAGS)  $(INC) -o $(NAME) $(OBJS)
+	@$(CC) $(FLAGS) $(INC) -o $(NAME) $(OBJS)
 	@echo "Compilation completed.\n./minishell is ready to use !"
 
 clean:

@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/02 13:40:19 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/02 14:32:30 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,16 @@ static int ft_exit(char *str)
     i = 0;
     j = 0;
     exit = "exit";
-    while (str[j] == 32)
-		j++;
-    while(exit[i])
+    if (str)
     {
-        if (str[i + j] != exit[i])
-            return (0);
-        i++;
+        while (str[j] == 32)
+		    j++;
+        while(exit[i])
+        {
+            if (str[i + j] != exit[i])
+                return (0);
+            i++;
+        }
     }
     return (1);
 }
@@ -39,11 +42,15 @@ int main(int ac, char **av, char **envp)
     (void)envp; // a virer
     while (ac > 0)
     {
-        str = readline(GRN"nedebies@minishell-&> "GRN);
-        if (ft_exit(str))
+        str = readline(GRN"nedebies@student.s19.be minishell &> "GRN);
+        if (!str || ft_exit(str)) // AUCUNE GESTION DES CTRL+X atm
             break ;
-        //else
+        else
+            write(1, "rien atm\n", 9); //a virer ofc
         //    ft_minishell(str, envp);
+        ft_parser();
+        exec();
+         subsys();
     }
     return (0);
 }
