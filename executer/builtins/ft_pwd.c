@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:36:57 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 15:52:25 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 16:06:30 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,12 @@ int ft_pwd(char **split, char **envp)
             return (1);
     }
     i = 0;
-    while (ft_strnstr(envp[i], "PWD", 4) == 0) //segfault atm
-		i++;
-    ft_putstr_fd(ft_strchr(split[i], 61), 1);
+    while (ft_strnstr(envp[i], "PWD", 4) == 0)
+        i++;
+    if (envp[i])
+    {
+        ft_putstr_fd(envp[i] + 4, 1);
+        write(1, "\n", 1);
+    }
     return (0);
 }
