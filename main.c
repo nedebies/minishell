@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 15:32:37 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:50:19 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int ft_parse_builtins(char **split, char **envp)
         return(1);
     if(ft_export(split))
         return(0);
-    if(ft_pwd(split))
+    if(ft_pwd(split, envp))
         return(0);
     if(ft_unset(split))
         return(0);

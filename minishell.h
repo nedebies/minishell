@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 15:35:53 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:49:32 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int ft_lexer(void);
 /**   BUILTINS  **/
 int ft_echo(char **split);
 int ft_cd(char **split);
-int ft_pwd(char **split);
+int ft_pwd(char **split, char **envp);
 int ft_export(char **split);
 int ft_unset(char **split);
 int ft_env(char **split, char **envp);
