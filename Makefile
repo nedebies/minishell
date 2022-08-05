@@ -10,6 +10,7 @@ SRCS	=	main.c \
 			./executer/builtins/ft_exit.c \
 			./expander/ft_expander.c \
 			./libft/ft_putstr_fd.c \
+			./libft/ft_split.c \
 			./lexer/ft_lexer.c
 
 OBJS	= $(SRCS:.c=.o)

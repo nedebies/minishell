@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 14:18:18 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 14:27:00 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ int main(int ac, char **av, char **envp)
         str = readline(GRN"not-bash&> "GRN);
         if (!str || ft_parse_builtins(str, envp)) // NO CTRL+C CTRL+D CTRL+(backslash) atm
             break ; // MUST ADD FREES LATER
-        else
-            write(1, "rien atm\n", 9); // TEMPORARY
         //    ft_minishell(str, envp);
         ft_parser(); // TO DO
         ft_executer(); // TO DO

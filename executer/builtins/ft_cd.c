@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:35:59 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 12:45:14 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:21:35 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,6 @@
 
 int ft_cd(char *str)
 {
-    (void)str;
+    chdir(str);
     return (0);
 }
