@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 13:19:43 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 14:14:13 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,11 @@
 # include "./libft/libft.h"
 
 int ft_parser(void);
+
 int ft_executer(void);
+
 int ft_expander(void);
+
 int ft_lexer(void);
 
 /**   BUILTINS  **/

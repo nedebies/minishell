@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 13:20:51 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 14:18:18 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,19 @@ int main(int ac, char **av, char **envp)
 {
     char *str;
     (void)av;
-    (void)envp; // a virer
+
     while (ac > 0)
     {
-        str = readline(GRN"nedebies@student.s19.be minishell &> "GRN);
-        if (!str || ft_parse_builtins(str, envp)) // AUCUNE GESTION DES CTRL+X atm
-            break ;
+        str = readline(GRN"not-bash&> "GRN);
+        if (!str || ft_parse_builtins(str, envp)) // NO CTRL+C CTRL+D CTRL+(backslash) atm
+            break ; // MUST ADD FREES LATER
         else
-            write(1, "rien atm\n", 9); //a virer ofc
+            write(1, "rien atm\n", 9); // TEMPORARY
         //    ft_minishell(str, envp);
-        ft_parser();
-        ft_executer();
-        ft_expander();
-        ft_lexer();
+        ft_parser(); // TO DO
+        ft_executer(); // TO DO
+        ft_expander(); // TO DO
+        ft_lexer(); // TO DO
     }
     return (0);
 }
