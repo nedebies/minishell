@@ -9,6 +9,7 @@ SRCS	=	main.c \
 			./executer/builtins/ft_env.c \
 			./executer/builtins/ft_exit.c \
 			./expander/ft_expander.c \
+			./libft/ft_putstr_fd.c \
 			./lexer/ft_lexer.c
 
 OBJS	= $(SRCS:.c=.o)
@@ -26,7 +27,7 @@ HEADER	= minishell.h
 all:	$(NAME)
 
 %.o: %.c $(HEADER)
-	@$(CC) $(FLAGS) -c $< -o $@
+	@${CC} ${FLAGS} -c $< -o $@
 
 $(NAME): $(OBJS)
 	@$(CC) $(FLAGS) $(INC) -o $(NAME) $(OBJS)

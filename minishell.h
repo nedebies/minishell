@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 12:45:02 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 13:19:43 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "./libft/libft.h"
 
 int ft_parser(void);
 int ft_executer(void);
@@ -32,6 +33,6 @@ int ft_cd(char *str);
 int ft_pwd(char *str);
 int ft_export(char *str);
 int ft_unset(char *str);
-int ft_env(char *str);
+int ft_env(char *str, char **envp);
 int ft_exit(char *str);
 #endif
