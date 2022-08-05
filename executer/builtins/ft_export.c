@@ -6,14 +6,14 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:38:03 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 12:45:54 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:35:13 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int ft_export(char *str)
+int ft_export(char **split)
 {
-    (void)str;
+    (void)split;
     return (0);
 }

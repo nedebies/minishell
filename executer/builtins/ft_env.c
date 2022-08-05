@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:40:31 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 13:22:53 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:34:15 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ static int isenv(char *str)
     return (1);
 }
 
-int ft_env(char *str, char **envp)
+int ft_env(char **split, char **envp)
 {
     int i;
 
     i = 0;
-    if (isenv(str))
+    if (isenv(split[0]))
     {
         while(envp[i])
         {

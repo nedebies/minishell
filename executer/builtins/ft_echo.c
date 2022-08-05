@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:33:56 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 15:23:25 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:35:41 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ static	char	**ft_free_my_split(size_t j, char **split)
 	return (NULL);
 }**/
 
-int ft_echo(char *str)
+int ft_echo(char **split)
 {
-    (void)str;
+    (void)split;
     /**char **split;
 
     split = NULL;
