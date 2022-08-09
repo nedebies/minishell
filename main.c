@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 15:50:19 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/08 13:37:05 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,11 @@ int main(int ac, char **av, char **envp)
         str = readline(GRN"not-bash&> "GRN);
         split = ft_split(str, 32);
         if (!str || ft_parse_builtins(split, envp)) // NO CTRL+C CTRL+D CTRL+(backslash) atm
-            break ; // MUST ADD FREES LATER
+        {
+            if (ft_parse_builtins(split, envp))
+                ft_free_split(split);
+            break ;
+        }// MUST ADD FREES LATER
         //    ft_minishell(str, envp);
         ft_parser(); // TO DO
         ft_executer(); // TO DO

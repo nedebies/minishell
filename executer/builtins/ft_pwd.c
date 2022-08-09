@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:36:57 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/05 16:06:30 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/08 13:52:16 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,18 @@
 int ft_pwd(char **split, char **envp)
 {
     int i;
-    char   *pwd;
 
-    pwd = "pwd";
-    i = -1;
-    while(pwd[++i])
-    {
-        if (split[0][i] != pwd[i])
-            return (1);
-    }
     i = 0;
-    while (ft_strnstr(envp[i], "PWD", 4) == 0)
-        i++;
-    if (envp[i])
+    if(!ft_strncmp(split[0], "pwd", 3) || !ft_strncmp(split[0], "PWD", 3))
     {
-        ft_putstr_fd(envp[i] + 4, 1);
-        write(1, "\n", 1);
+        while (ft_strnstr(envp[i], "PWD", 4) == 0)
+            i++;
+        if (envp[i])
+        {
+            ft_putstr_fd(envp[i] + 4, 1);
+            write(1, "\n", 1);
+        }
+        return (1);
     }
     return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 15:07:21 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/02 15:14:06 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/08 13:13:04 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,9 @@
 
 int ft_lexer(void)
 {
+    void    *ptr;
+
+    ptr = NULL;
+    ft_lstnew(ptr);
     return (0);
 }
