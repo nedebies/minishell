@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/09 22:46:35 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/09 23:22:13 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,13 @@ int main(int ac, char **av, char **envp)
         str = readline(GRN"not-bash&> "GRN);
         add_history(str); //simplier to create an history than a list
         cmd = lexer(str);
-        if (!cmd)
+        //cmd = ft_split(str, 32);
+        if (!cmd || ft_parse_builtins(cmd, envp))
         {
-            if (ft_parse_builtins(cmd, envp))
+            if (cmd)
                 ft_free_split(cmd);
             break ;
         }  // NO CTRL+C CTRL+D CTRL+(backslash) atm
-// MUST ADD FREES LATER
-    //     ft_minishell(str, envp);
-    //     ft_parser(); // TO DO
-    //     ft_executer(); // TO DO
-    //     ft_expander(); // TO DO
-    //     ft_free_split(split);
     }
     free(str);
     return (0);
