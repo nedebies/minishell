@@ -15,8 +15,9 @@ SRCS	=	main.c \
 			./libft/ft_strlen.c \
 			./libft/ft_strncmp.c \
 			./libft/ft_split.c \
-			./libft/ft_lstnew.c \
-			./lexer/ft_lexer.c
+			./libft/ft_strdup.c \
+			./libft/ft_substr.c \
+			./lexer/lexer.c
 
 OBJS	= $(SRCS:.c=.o)
 

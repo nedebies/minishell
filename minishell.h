@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/08 13:11:45 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/09 22:53:14 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,29 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+# define METACHARACTERS "()<>|&"
+# define QUOTES         "\'\""
+# define SPACES         "\t\n"
+/**
+typedef struct  s_token
+{
+    int     type;
+    char    *string;
+}               t_token;
+
+typedef struct  s_split
+{
+    char            **split;
+    struct s_split  *next;
+}               t_split;**/
+
 int ft_parser(void);
 
 int ft_executer(void);
 
 int ft_expander(void);
 
-int ft_lexer(void);
+char    **lexer(char *str);
 
 /**   BUILTINS  **/
 int ft_echo(char **split);
