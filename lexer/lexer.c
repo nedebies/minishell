@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:21:47 by hdony             #+#    #+#             */
-/*   Updated: 2022/08/09 23:01:40 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/10 09:31:20 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,8 @@ static char **check_token(char **tab)
 char    **lexer(char *cmd)
 {
     char    **tab;
-
     tab = NULL;
-    if (ft_strlen(cmd) > 0)
+    if (cmd)
     {
         tab = ft_split(cmd, 32);
         if (!tab)
