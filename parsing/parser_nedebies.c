@@ -5,12 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/25 11:55:51 by nedebies          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/08/25 16:49:01 by nedebies         ###   ########.fr       */
-=======
-/*   Updated: 2022/08/25 15:39:57 by nedebies         ###   ########.fr       */
->>>>>>> 914ce489a2c02d607dc7126a8125f6edeeeec1f4
+/*   Created: 2022/08/25 17:00:37 by nedebies          #+#    #+#             */
+/*   Updated: 2022/08/25 17:01:01 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,11 +175,7 @@ int	parser(char *line, t_cmnd *cmds)
 	if (!g_manager.count_cmd)
 		return (1);
 	ft_memset(cmds, '\0', sizeof(t_cmnd) * g_manager.count_cmd);
-<<<<<<< HEAD
-	init_cmds(tokens, cmds); // TO FINISH
-=======
 	init_cmd(tokens, cmds); // TO FINISH
->>>>>>> 914ce489a2c02d607dc7126a8125f6edeeeec1f4
 	free(line);
 	ft_lstclear(&tokens, free);
 	return (0);
