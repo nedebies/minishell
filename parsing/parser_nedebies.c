@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_nedebies.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 17:00:37 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/25 17:01:01 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/25 18:56:50 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ int	parser(char *line, t_cmnd *cmds)
 	if (!g_manager.count_cmd)
 		return (1);
 	ft_memset(cmds, '\0', sizeof(t_cmnd) * g_manager.count_cmd);
-	init_cmd(tokens, cmds); // TO FINISH
+	init_cmds(tokens, cmds); // TO FINISH
 	free(line);
 	ft_lstclear(&tokens, free);
 	return (0);

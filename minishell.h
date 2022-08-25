@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/25 17:02:11 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/25 22:43:49 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,15 @@
 # define EXIT_MAX 255
 # define EXIT_SYNTAXERR 258
 
-# define AST_NULL 0
-# define AST_PIPELINE 1
-# define AST_CMD 2
+# define MODE_APPEND 1
+# define MODE_READ 2
+# define MODE_WRITE 3
+# define MODE_HEREDOC 4
+
+typedef struct  s_redir{
+	char	*name;
+	char	mode;
+}				t_redir;
 
 typedef struct  s_env
 {
@@ -59,19 +65,11 @@ typedef struct  s_manager
     int                 count_cmd;
 }						t_manager;
 
-typedef struct    s_redir
-{
-    char            *arg;
-    int             type;
-    struct t_redir  *next;
-}                t_redir;
-
 typedef struct    s_cmnd
 {
     char            *executable;
     char            **argv;
-    t_redir			*in;
-    t_redir         *out;
+    t_list			*redir;
     struct s_cmnd   *next;
 }                t_cmnd;
 
@@ -106,12 +104,20 @@ void 	handle_text_metachar_1(char **tab2, char *str, char *metachar_mark, int *t
 void    ft_print_tab(char **tab2);
 
 /** PARSER (by hdony & odan) **/
+/**
 void        ft_parser(char **cmd);
 int         check_content(char *str);
 int         check_smpl_cmd_content(char **cmd);
 int         check_left_ofpipe(char **cmd);
 t_cmnd      *ft_parse_smpl_cmd(char **cmd);
-int         args_count(char **cmd, int j);
+int         args_count(char **cmd, int j);**/
+
+int	put_in_mid_line(char **line, char *str, int start, int end);
+char	*parse_line(char *line);
+int     ft_count_args(t_list *lst);
+char    **init_args(t_list *lst);
+void	ft_init_file(t_list *lst, t_cmnd cmd);
+void init_cmds(t_list *lst, t_cmnd *cmds);
 
 int	len_quotes(char *line, int i);
 t_list	*get_tokens(char *line, t_list *token);
