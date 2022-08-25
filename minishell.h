@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/25 11:21:01 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/25 14:31:21 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,8 @@ typedef struct  s_env
 typedef struct  s_manager
 {
 	t_env				*env;
-	char				*command_line;
-	int					rc;
 	int					exit_code;
-    int                 quote_error;
+    int                 count_cmd;
 }						t_manager;
 
 typedef struct    s_redir
@@ -115,9 +113,14 @@ int         check_left_ofpipe(char **cmd);
 t_cmnd      *ft_parse_smpl_cmd(char **cmd);
 int         args_count(char **cmd, int j);
 
+int	len_quotes(char *line, int i);
+t_list	*get_tokens(char *line, t_list *token);
+int	pre_parse(char *line);
+int	parser(char *line, t_cmnd *cmds);
+
 void    ft_init_env(char **envp);
 char    **ft_free_split(char **split);
-// void	ft_free_llist(t_btree *btree);
+void	ft_free_llist(t_cmnd *data);
 
 /** ENV (by nedebies) **/
 void	free_env(void);
@@ -131,6 +134,7 @@ void	add_env(char *name, char *value);
 
 /** EXEC (by nedebies) **/
 int	ft_executer(t_cmnd *cmnd, char **envp);
+int exec_builtins(t_cmnd *cmnd);
 
 /** SIGNAL HANDLING (by nedebies) **/
 void	init_signal(void);
@@ -149,6 +153,6 @@ int ft_env(char **envp);
 int ft_exit();
 
 /** PROCESS (by nedebies) **/
-// int	ft_processing(pid_t	*id, t_btree *data, char **envp, int cnt_cmd);
+int	ft_processing(pid_t	*id, t_cmnd *data, char **envp, int cnt_cmd);
 
 #endif

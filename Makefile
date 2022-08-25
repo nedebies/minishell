@@ -1,7 +1,6 @@
 SRCS	=	main.c \
-			./parsing/parser_hdony.c \
-			./parsing/parsing_smp_cmd_hdony.c \
-			./parsing/parsing_cmp_cmd_hdony.c \
+			./parsing/parser_nedebies.c \
+			./parsing/parser_utils_nedebies.c \
 			./executer/ft_executer.c \
 			./executer/process_manager.c \
 			./executer/builtins/ft_builtins_manager.c \
@@ -28,6 +27,10 @@ SRCS	=	main.c \
 			./libft/ft_substr.c \
 			./libft/ft_isalpha.c \
 			./libft/ft_memset.c \
+			./libft/ft_lstnew.c \
+			./libft/ft_lstadd_back.c \
+			./libft/ft_lstclear.c \
+			./libft/ft_lstdelone.c \
 			./libft/ft_strlcpy.c \
 			./lexer/lexer.c \
 			./lexer/lexer_split.c \
