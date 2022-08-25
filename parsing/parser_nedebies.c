@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_nedebies.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 11:55:51 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/25 11:57:16 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/25 15:39:57 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/** Return the quotes tokens' lenghts **/
 int	len_quotes(char *line, int i)
 {
 	char	quotes;
@@ -25,6 +26,7 @@ int	len_quotes(char *line, int i)
 	return (len + 1);
 }
 
+/** Return the lenght of a token **/
 static int	len_token(char *line, int i)
 {
 	int	len;
@@ -54,6 +56,7 @@ static int	len_token(char *line, int i)
 	return (len);
 }
 
+/** Create a tokens' t_list **/
 t_list	*get_tokens(char *line, t_list *token)
 {
 	int		len;
@@ -74,7 +77,7 @@ t_list	*get_tokens(char *line, t_list *token)
 	return (token);
 }
 
-
+/** Check if the line's empty or if it's full of whitespaces **/
 static	int	check_empty_line(char *line)
 {
 	if (!*line)
@@ -89,6 +92,7 @@ static	int	check_empty_line(char *line)
 	return (0);
 }
 
+/** Throw the error in case of unclosed quotes**/
 static char	*print_quotes_er(char quotes)
 {
 	if (quotes == '\'')
@@ -98,6 +102,7 @@ static char	*print_quotes_er(char quotes)
 	return (NULL);
 }
 
+/** Print generic errors about tokens **/
 static char	*print_er(char *error)
 {
 	ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
@@ -106,6 +111,7 @@ static char	*print_er(char *error)
 	return (NULL);
 }
 
+/** Check if quotes are closed and if pipes aren't doubled **/
 static char	*ft_check_sign(char *line, char quotes, int *count_cmd)
 {
 	if (*line == '\'' || *line == '\"')
@@ -129,6 +135,7 @@ static char	*ft_check_sign(char *line, char quotes, int *count_cmd)
 	return (line);
 }
 
+/** Check at first it the line is empty or check if the line doesn't end with a special char **/
 int	pre_parse(char *line)
 {
 	char	quotes;
@@ -152,23 +159,23 @@ int	pre_parse(char *line)
 	return (count_cmd);
 }
 
-int	parser(char *line, t_mshl *mini)
+int	parser(char *line, t_cmnd *cmds)
 {
 	t_list	*tokens;
 
 	tokens = NULL;
-	mini->count_cmd = pre_parse(line);
-	if (mini->count_cmd == -1)
+	g_manager.count_cmd = pre_parse(line);
+	if (g_manager.count_cmd == -1)
 	{
-		ft_putenv(&mini->head_env, "?", "1");
+		//throw error
 		return (1);
 	}
 	tokens = get_tokens(line, tokens);
-	mini->cmd = malloc(sizeof(t_cmd) * mini->count_cmd);
-	if (!mini->count_cmd)
+	cmds = malloc(sizeof(t_cmnd) * g_manager.count_cmd);
+	if (!g_manager.count_cmd)
 		return (1);
-	ft_memset(mini->cmd, '\0', sizeof(t_cmd) * mini->count_cmd);
-	init_cmd(tokens, mini);
+	ft_memset(cmds, '\0', sizeof(t_cmnd) * g_manager.count_cmd);
+	init_cmd(tokens, cmds); // TO FINISH
 	free(line);
 	ft_lstclear(&tokens, free);
 	return (0);

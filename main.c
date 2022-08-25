@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/25 12:00:48 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/25 14:32:45 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,6 @@ char	**ft_free_split(char **split)
 	return (0);
 }
 
-static void	init_manager(char *command_line)
-{
-	g_manager.command_line = command_line;
-	g_manager.rc = 0;
-	g_manager.quote_error = 0;
-}
-
 static void exit_main(char *str)
 {
 	if (!str)
@@ -73,12 +66,11 @@ static void	init_env(int ac, char **av, char **envp)
 int main(int ac, char **av, char **envp)
 {
 	char 	*str;
-	char	**cmd;
-	t_cmnd	*cmnd;
+	t_cmnd	*cmds;
 
 //	t_cmnd	*cmnd_tab;
 // 		cmnd_tab = parse_nopipes(cmd);
-
+	cmds = NULL;
 	init_env(ac, av, envp);
 	while (ac > 0)
 	{
@@ -92,13 +84,13 @@ int main(int ac, char **av, char **envp)
 		else
 		{
 			add_history(str);
-			init_manager(str);
-			if (parser(str, cmnd))
+			g_manager.count_cmd = 0;
+			if (parser(str, cmds))
 				free(str);
 			else
 			{
-				ft_executor(cmnd);
-				free_mshl(cmnd);
+				ft_executer(cmds, envp);
+				//free_mshl(cmnd);
 			}
 		}
 	}
