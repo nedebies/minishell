@@ -3,29 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:40:31 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/08 13:51:44 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/24 10:07:04 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int ft_env(char **split, char **envp)
+int	ft_env(char **av)
 {
-    int i;
-
-    i = 0;
-    if (!ft_strncmp(split[0], "env", 3) || !ft_strncmp(split[0], "ENV", 3))
-    {
-        while(envp[i])
-        {
-            ft_putstr_fd(envp[i], 1);
-            write(1, "\n", 1);
-            i++;
-        }
-        return (1);
-    }
-    return (0);
+	t_env	*ptr;
+	ptr = g_manager.env;
+	if (*av)
+		return (throw_error("env", *av, "No such file or directory"));
+	while (ptr)
+	{
+		if (ptr->value)
+		{
+			ft_putstr_fd(ptr->name, STDOUT_FILENO);
+			write(STDOUT_FILENO, "=", 1);
+			ft_putstr_fd(ptr->value, STDOUT_FILENO);
+			write(STDOUT_FILENO, "\n", 1);
+		}
+		ptr = ptr->next;
+	}
+	return (EXIT_SUCCESS);
 }

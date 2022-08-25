@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:33:56 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/10 09:38:14 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/24 10:06:24 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
 
 int ft_echo(char **split)
 {
@@ -20,18 +19,24 @@ int ft_echo(char **split)
 
     i = 0;
     nl = 1;
-    if (split && !ft_strncmp(split[0], "echo", 4))
-    {
-        if (!ft_strncmp(split[1], "-n", 2))
+
+        if (!split[0])
+        {
+            write(1, "\n", 1);
+            return (0);
+        }
+        if (!ft_strncmp(split[0], "-n", 2))
         {
             nl = 0;
-            while(split[1][++i])
+            while(split[0][++i])
             {
                 if (split[1][i] != 'n')
-                    return(0); // throw error instead
+                    throw_error_usage(split[0], split[1]);
             }
+            if (!split[1])
+                throw_error_usage(split[0], split[2]);
         }
-        i = 1;
+        i = 0;
         if (nl == 1)
         {
             while(split[i])
@@ -43,14 +48,13 @@ int ft_echo(char **split)
         }
         else
         {
-            while(split[i + 1])
+            while(split[i])
             {
-                ft_putstr_fd(split[i + 1], 1);
-                if (split[i + 2])
+                ft_putstr_fd(split[i], 1);
+                if (split[i + 1])
                     write(1, " ", 1);
                 i++;
             }
         }
-    }
     return (0);
 }

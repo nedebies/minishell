@@ -3,22 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/10 09:41:20 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/25 12:00:48 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	int	ft_free_split(char **split)
+extern t_manager		g_manager; //variable globale pas convaincu atm !
+
+void	ft_free_llist(t_cmnd *data)
+{
+	t_cmnd	*tmp;
+
+	tmp = data;
+	while (tmp->next != NULL)
+	{
+		free(tmp);
+	}
+	free(data);
+}
+
+char	**ft_free_split(char **split)
 {
 	size_t i;
 	i = 0;
-	if (split)
+
+	if (*split)
 	{
-		while (split[i])
+		while (split[i] != 0)
 			i++;
 		while (i != 0)
 			free(split[--i]);
@@ -27,51 +42,65 @@ static	int	ft_free_split(char **split)
 	return (0);
 }
 
-static int ft_parse_builtins(char **split, char **envp)
+static void	init_manager(char *command_line)
 {
-	if(!split)
-		return (0);
-	if(ft_cd(split))
-		return(0);
-	if(ft_echo(split))
-		return(0);
-	if(ft_env(split, envp))
-		return(0);
-	if(ft_exit(split))
-		return(1);
-	if(ft_export(split))
-		return(0);
-	if(ft_pwd(split, envp))
-		return(0);
-	if(ft_unset(split))
-		return(0);
-	return (0);
+	g_manager.command_line = command_line;
+	g_manager.rc = 0;
+	g_manager.quote_error = 0;
+}
+
+static void exit_main(char *str)
+{
+	if (!str)
+	{
+		ft_putstr_fd("exit\n", STDERR_FILENO);
+		free(str);
+		exit(EXIT_SUCCESS);
+	}
+}
+
+static void	init_env(int ac, char **av, char **envp)
+{
+	if (ac > 1)
+		throw_error_exit(av[1], strerror(ENOENT), EXIT_ENOENT);
+	while (*envp)
+	{
+		add_env(get_env_name(*envp), get_env_value(*envp));
+		envp++;
+	}
 }
 
 int main(int ac, char **av, char **envp)
 {
-	char *str; // readline()
-	char **cmd; // readline() splitted and TOKENIZED
+	char 	*str;
+	char	**cmd;
+	t_cmnd	*cmnd;
 
-	(void)av;
-	str = NULL;
-	cmd = NULL;
+//	t_cmnd	*cmnd_tab;
+// 		cmnd_tab = parse_nopipes(cmd);
+
+	init_env(ac, av, envp);
 	while (ac > 0)
 	{
-		str = readline(GRN"not-bash&> "GRN);
-		if (str)
-			add_history(str); //simplier to create an history than a list
-		cmd = lexer(str);
-		//cmd = ft_split(str, 32);
-		write(1, "1", 1);
-		if (ft_parse_builtins(cmd, envp))
+		init_signal();
+		str = readline("\001\033[1;92m\002not-bash> \001\033[0m\002");
+		signal(SIGINT, &handle_sigint2);
+		if (!str)
+			exit_main(str);
+		if (!ft_strlen(str))
+			free(str);
+		else
 		{
-			if (cmd)
-				ft_free_split(cmd);
-			write(1, "2", 1);
-			break ;
-		}  // NO CTRL+C CTRL+D CTRL+(backslash) atm
+			add_history(str);
+			init_manager(str);
+			if (parser(str, cmnd))
+				free(str);
+			else
+			{
+				ft_executor(cmnd);
+				free_mshl(cmnd);
+			}
+		}
 	}
-	free(str);
-	return (0);
+	return (EXIT_SUCCESS);
 }

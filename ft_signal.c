@@ -1,27 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/05 12:36:57 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/24 10:10:42 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/23 22:22:35 by nedebies          #+#    #+#             */
+/*   Updated: 2022/08/24 10:01:46 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "minishell.h"
 
-int	ft_pwd(char **av)
+void	handle_sigint(int signo)
 {
-	char	*cwd;
-	if (*av && check_option(*av) == EXIT_FAILURE)
-		return (throw_error_usage("pwd", *av));
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		return (throw_error("pwd", NULL, strerror(errno)));
-	ft_putstr_fd(cwd, STDOUT_FILENO);
-	ft_putstr_fd("\n", STDOUT_FILENO);
-	free(cwd);
-	return (EXIT_SUCCESS);
+	if (signo == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_replace_line("", 1);
+		rl_on_new_line();
+		rl_redisplay();
+		g_manager.exit_code = 1;
+	}
 }
+
+void	handle_sigint2(int signo)
+{
+	if (signo == SIGINT)
+		ft_putendl_fd("", 1);
+}
+
+void	init_signal(void)
+{
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+}
+
