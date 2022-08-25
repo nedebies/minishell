@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/25 14:31:21 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/25 17:02:11 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ typedef enum	s_redir_type
 	DLESS,
 }				t_redir_type;
 
-extern t_manager		g_manager; //variable globale pas convaincu atm !
+extern t_manager		g_manager;
 t_manager		g_manager;
 
 /* ERRORS (by nedebies)*/
