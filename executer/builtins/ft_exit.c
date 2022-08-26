@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:41:01 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/24 10:08:08 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 02:50:55 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,6 @@ int ft_exit(char **av)
         if (arg > 2)
 		return (throw_error("exit", 0, "too many arguments"));
         free_env();
-        ft_free_split(av);
+        ft_free_arr(av);
         exit(EXIT_SUCCESS);
 }

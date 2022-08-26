@@ -1,16 +1,54 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_init_env.c                                      :+:      :+:    :+:   */
+/*   envp_manager.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 10:29:34 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/23 22:43:02 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 02:46:06 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	count_var_nbr(void)
+{
+	t_env	*tmp;
+	int		vc;
+
+	tmp = g_manager.env;
+	vc = 0;
+	while (tmp->next != NULL)
+	{
+		vc++;
+		tmp = tmp->next;
+	}
+	return (vc);
+}
+
+char	**new_envp(void)
+{
+	char	**new;
+	t_env	*tmp;
+	char	*new_str;
+	int		i;
+
+	tmp = g_manager.env;
+	new = malloc(sizeof(char*) * (count_var_nbr() + 1));
+	i = -1;
+	if (!new)
+		return (NULL);
+	while (tmp->next != NULL)
+	{
+		new_str = ft_strjoin(tmp->name, "=");
+		new[++i] = ft_strjoin(new_str, tmp->value);
+		free(new_str);
+		tmp = tmp->next;
+	}
+	new[i] = 0;
+	return (new);
+}
 
 void	*minishell_calloc(size_t count, size_t size)
 {

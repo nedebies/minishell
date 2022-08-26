@@ -11,30 +11,30 @@ SRCS	=	main.c \
 			./executer/builtins/ft_unset.c \
 			./executer/builtins/ft_exit.c \
 			./env/envp_manager.c \
-			./expander/ft_expander.c \
 			./libft/ft_putstr_fd.c \
 			./libft/ft_strnstr.c \
 			./libft/ft_strchr.c \
 			./libft/ft_strlen.c \
 			./libft/ft_putendl_fd.c \
+			./libft/ft_putchar_fd.c \
 			./libft/ft_strncmp.c \
 			./libft/ft_isalnum.c \
 			./libft/ft_isdigit.c \
 			./libft/ft_strjoin.c \
 			./libft/ft_split.c \
 			./libft/ft_strdup.c \
+			./libft/ft_calloc.c \
 			./libft/ft_substr.c \
+			./libft/ft_memcpy.c \
+			./libft/ft_itoa.c \
 			./libft/ft_isalpha.c \
 			./libft/ft_memset.c \
 			./libft/ft_lstnew.c \
 			./libft/ft_lstadd_back.c \
 			./libft/ft_lstclear.c \
+			./libft/ft_lstsize.c \
 			./libft/ft_lstdelone.c \
 			./libft/ft_strlcpy.c \
-			./lexer/lexer.c \
-			./lexer/lexer_split.c \
-			./lexer/lexer_stringcount.c \
-			./lexer/lexer_token.c \
 			ft_signal.c \
 			error.c
 

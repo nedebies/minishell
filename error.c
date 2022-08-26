@@ -6,56 +6,11 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 18:09:45 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 02:41:33 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 02:51:51 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-static int	ft_len_nbr(long d)
-{
-	int	len;
-
-	len = 1;
-	if (d < 0)
-	{
-		d = -d;
-		len += 1;
-	}
-	while (d >= 10)
-	{
-		len++;
-		d /= 10;
-	}
-	return (len);
-}
-
-static char	*ft_itoa(int n)
-{
-	char	*str;
-	int		len;
-	int		i;
-	long	nbr;
-
-	nbr = n;
-	i = 0;
-	len = ft_len_nbr(nbr);
-	str = malloc(sizeof(char) * (len + 1));
-	if (str == NULL)
-		return (NULL);
-	if (nbr < 0)
-	{
-		nbr = -nbr;
-		str[i] = '-';
-	}
-	str[len - i++] = '\0';
-	while (nbr >= 10)
-	{
-		str[len - i++] = (nbr % 10) + '0';
-		nbr /= 10;
-	}
-	str[len - i] = (nbr % 10) + '0';
-	return (str);
-}
 
 int	ft_print_error(const char *str, int nbr)
 {

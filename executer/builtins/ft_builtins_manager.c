@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 11:29:03 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 02:29:18 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 02:49:56 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	is_builtin(t_mshl *data, int num_cmd)
 {
 	char	*cmd;
 
-	cmd = data->cmd[i].cmd;
+	cmd = data->cmd[num_cmd].cmd;
 	if (!ft_strncmp(cmd, "cd", 2))
 		return (1);
 	if (!ft_strncmp(cmd, "echo", 4))
@@ -34,13 +34,13 @@ int	is_builtin(t_mshl *data, int num_cmd)
 	return (0);
 }
 
-int exec_builtins(t_mshl cmnd, int i)
+int exec_builtins(t_mshl *cmnd, int i)
 {
 	char	*cmd;
 	char	**av;
 
-	cmd = cmnd.cmd[i].cmd;
-	av = cmnd.cmd[i].arguments;
+	cmd = cmnd->cmd[i].cmd;
+	av = cmnd->cmd[i].arguments;
 	if (!ft_strncmp(cmd, "cd", 2))
 		return (ft_cd(av));
 	if (!ft_strncmp(cmd, "echo", 4))
@@ -56,4 +56,35 @@ int exec_builtins(t_mshl cmnd, int i)
 	if (!ft_strncmp(cmd, "unset", 5))
 		return (ft_unset(av));
 	return (EXIT_FAILURE);
+}
+
+static char	*ft_join_env(t_env *env)
+{
+	char	*str_env;
+	char	*tmp;
+
+	tmp = ft_strjoin(env->name, "=");
+	str_env = ft_strjoin(tmp, env->value);
+	free(tmp);
+	return (str_env);
+}
+
+char	**list2mass_env(t_list *lst)
+{
+	int		i;
+	int		size;
+	char	**mass;
+	t_env	*env;
+
+	size = ft_lstsize(lst) + 1;
+	mass = malloc(size * sizeof(char *));
+	i = 0;
+	while (lst && i < size)
+	{
+		env = (t_env *)lst->content;
+		mass[i++] = ft_join_env(env);
+		lst = lst->next;
+	}
+	mass[i] = NULL;
+	return (mass);
 }

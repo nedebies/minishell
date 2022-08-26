@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 02:43:51 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 02:49:40 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,10 @@ int 	ft_find_text(char *str, int metachar_len);
 void 	handle_text_metachar_1(char **tab2, char *str, char *metachar_mark, int *text_len, int *j);
 void    ft_print_tab(char **tab2);
 
+/** EXEC (by nedebies) **/
+int	ft_executer(t_mshl *data);
+int exec_builtins(t_mshl *cmnd, int i);
+
 /** PARSER (by hdony & odan) **/
 /**
 void        ft_parser(char **cmd);
@@ -142,17 +146,12 @@ void	add_env(char *name, char *value);
 int	count_var_nbr(void);
 char	**new_envp(void);
 
-/** EXEC (by nedebies) **/
-int	ft_executer(t_mshl *data);
-int exec_builtins(t_mshl *cmnd, int i);
-
 /** SIGNAL HANDLING (by nedebies) **/
 void	init_signal(void);
 void	handle_sigint(int signo);
 void	handle_sigint2(int signo);
 
 /**   BUILTINS (by nedebies) **/
-// int exec_builtins(t_btree *btree);
 int	is_builtin(t_mshl *data, int num_cmd);
 int ft_echo(char **split);
 int ft_cd(char **split);

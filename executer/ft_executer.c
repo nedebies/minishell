@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 14:28:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 02:39:59 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 02:56:40 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static int	cmd_with_path(t_mshl *dt, char **envp, char **path)
 	return (0);
 }
 
-int	executor(t_mshl *data)
+int	ft_executer(t_mshl *data)
 {
 	pid_t	*id;
 	char	**path;
