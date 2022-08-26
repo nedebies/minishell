@@ -6,105 +6,88 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 14:28:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/25 11:17:52 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 02:39:59 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/** Check if the non builtin command actually exist **/
-static int	is_valid_cmd2(t_cmnd *cmnd, char **paths)
+void	ft_dup_fd(int i, int **fd, t_mshl *data)
 {
-	char	*part_path;
-	char	*path;
+	if (i != 0)
+		dup2(fd[i - 1][0], STDIN_FILENO);
+	if (i != data->count_cmd -1)
+		dup2(fd[i][1], STDOUT_FILENO);
+	if (data->cmd[i].in_file)
+	{
+		dup2(data->cmd[i].in_file, STDIN_FILENO);
+		close(data->cmd[i].in_file);
+	}
+	if (data->cmd[i].out_file)
+	{
+		dup2(data->cmd[i].out_file, STDOUT_FILENO);
+		close(data->cmd[i].out_file);
+	}
+	ft_close_fd(fd, data);
+}
+
+static char	**ft_get_path(void)
+{
+	char	*tmp;
+	char	**path;
+
+	tmp = get_env_value("PATH");
+	path = ft_split(tmp, ':');
+	return (path);
+}
+
+static int	cmd_with_path(t_mshl *dt, char **envp, char **path)
+{
 	int		i;
 
-	i = -1;
-	while (paths[++i])
+	i = 0;
+	while (i < dt->count_cmd)
 	{
-		part_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(part_path, cmnd->executable);
-		free(part_path);
-		if (access(path, F_OK) == 0)
+		if (is_builtin(dt, i))
 		{
-			free(path);
-			return(1);
+			i++;
+			continue ;
 		}
-		free(path);
+		dt->cmd[i].cmd = join_path(dt->cmd[i].cmd, path);
+		if (!dt->cmd[i].cmd)
+		{
+			ft_free_arr(path);
+			ft_free_arr(envp);
+			return (-1);
+		}
+		i++;
 	}
 	return (0);
 }
 
-/** Return TRUE if every commands are valid (builtins or not) **/
-static int	is_valid_cmd(t_cmnd *cmnd, char **paths, int *cnt)
-{
-	int		i;
-	t_cmnd	*tmp;
-
-
-	tmp = cmnd;
-	i = -1;
-	while(tmp->next)
-	{
-		tmp = tmp->next;
-		cnt++;
-	}
-	while (++i < *cnt)
-	{
-		if(!is_builtin(cmnd->executable))
-			if (!is_valid_cmd2(cmnd, paths))
-				return (0);
-		cmnd = cmnd->next;
-	}
-	return (1);
-}
-
-/** Split the envps PATH **/
-static char	**get_paths(char **envp)
-{
-	char	**paths;
-	int		i;
-
-	i = 0;
-	while (ft_strnstr(envp[i], "PATH", 4) == 0)
-		i++;
-	paths = ft_split(envp[i] + 5, ':');
-	if (!paths)
-		return (NULL);
-	return (paths);
-}
-
-/** Check if the commands are valid before processing anything **/
-int	ft_executer(t_cmnd *cmnd, char **envp)
+int	executor(t_mshl *data)
 {
 	pid_t	*id;
-	char	**paths;
-	int		i;
-	char	*cmd;
+	char	**path;
+	int		ret;
+	char	**envp;
 
-	i = 1;
-	cmd = cmnd->executable;
-	if (!cmd)
+	envp = new_envp();
+	path = ft_get_path();
+	if (!data->cmd[0].cmd)
 	{
-		ft_free_llist(cmnd);
-		exit(EXIT_FAILURE);
+		ret = ft_redir(&data->cmd[0], data->cmd[0].redir);
+		ft_print_error(NULL, ret);
 	}
-	paths = get_paths(envp);
-	if (!paths)
+	else
 	{
-		ft_free_split(paths);
-		ft_free_llist(cmnd);
-		exit(EXIT_FAILURE);
+		if (cmd_with_path(data, envp, path) == -1)
+			return (-1);
+		id = malloc(sizeof(pid_t) * data->count_cmd);
+		ft_processing(id, data, envp);
+		free(id);
 	}
-	if (!is_valid_cmd(cmnd, paths, &i))
-	{
-		ft_free_split(paths);
-		ft_free_llist(cmnd);
-		exit(EXIT_FAILURE);
-	}
-	id = malloc(sizeof(pid_t) * i);
-	ft_processing(id, cmnd, envp, i);
-	free(id);
-	ft_free_split(paths);
-	return (EXIT_SUCCESS);
+	ft_free_arr(path);
+	ft_free_arr(envp);
+	return (0);
 }

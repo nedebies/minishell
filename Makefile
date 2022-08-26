@@ -1,6 +1,5 @@
 SRCS	=	main.c \
 			./parsing/parser_nedebies.c \
-			./parsing/parser_utils_nedebies.c \
 			./executer/ft_executer.c \
 			./executer/process_manager.c \
 			./executer/builtins/ft_builtins_manager.c \

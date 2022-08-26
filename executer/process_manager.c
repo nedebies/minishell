@@ -3,29 +3,65 @@
 /*                                                        :::      ::::::::   */
 /*   process_manager.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 23:47:01 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/25 16:23:34 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 02:43:10 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/** Close and free the processes **/
-static void	ft_close_fd(int *fd[2], int cnt_cmd)
+void	process(t_mshl *data, char **envp, int i, int **fd)
+{
+	int	ret;
+
+	ret = 0;
+	signal(SIGQUIT, SIG_DFL);
+	ret = ft_redir(data->cmd + i, data->cmd[i].redir);
+	if (ret)
+		exit(EXIT_FAILURE);
+	ft_dup_fd(i, fd, data);
+	if (is_builtin(data, i))
+		exec_builtins(data, i);
+	else if (execve(data->cmd[i].cmd, data->cmd[i].arguments, envp) == -1)
+	{
+		perror(data->cmd[i].cmd);
+		exit (126);
+	}
+	exit(EXIT_SUCCESS);
+}
+
+int	ft_create_pipe(int **fd, t_mshl *data)
 {
 	int	i;
 
 	i = 0;
-	while (i < cnt_cmd - 1)
+	while (i < data->count_cmd - 1)
+	{
+		if (pipe(fd[i]) == -1)
+		{
+			write(2, "error in pipe\n", 15);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+void	ft_close_fd(int *fd[2], t_mshl *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->count_cmd - 1)
 	{
 		close(fd[i][0]);
 		close(fd[i][1]);
 		i++;
 	}
 	i = 0;
-	while (i < cnt_cmd - 1)
+	while (i < data->count_cmd - 1)
 	{
 		free(fd[i]);
 		i++;
@@ -33,77 +69,45 @@ static void	ft_close_fd(int *fd[2], int cnt_cmd)
 	free(fd);
 }
 
-/** Wait the end of a process if necessary **/
-static void	ft_wait_process(pid_t *id, int cnt_cmd)
+static void	ft_wait_process(pid_t	*id, t_mshl *data)
 {
 	int		i;
 	int		ret;
 
 	i = 0;
-	while (i < cnt_cmd)
+	while (i < data->count_cmd)
 	{
 		waitpid(id[i], &ret, 0);
+		ret = set_exit_status(ret);
+		ft_print_error(NULL, ret);
 		i++;
 	}
 }
 
-/** Execute the command in a single process **/
-static void	process(t_cmnd *data, char **envp)
-{
-	signal(SIGQUIT, SIG_DFL);
-	// MUST CHECK REDIR HERE
-	//ft_dup_fd(i, fd, data); NOT INPUT YET
-	if (is_builtin(data->executable))
-		exec_builtins(data);
-	else if (execve(data->executable, data->argv, envp) < 0)
-		throw_error_exit(data->executable, "invalid option", EXIT_EACCES);
-	exit(EXIT_SUCCESS);
-}
-
-/** Generate the right amount of processes **/
-static int	ft_create_pipe(int **fd, int cnt_cmd)
-{
-	int	i;
-
-	i = 0;
-	while (i < cnt_cmd - 1)
-	{
-		if (pipe(fd[i]) < 0)
-		{
-			ft_putstr_fd("error in pipe\n", 2);
-			return(1);
-		}
-		i++;
-	}
-	return (0);
-}
-
-/** Check if theres x pipes to create x + 1 processes
-	If x = 0 check if its a builtin to execute it **/
-int	ft_processing(pid_t	*id, t_cmnd *data, char **envp, int cnt_cmd)
+int	ft_processing(pid_t	*id, t_mshl *data, char **envp)
 {
 	int		i;
 	int		**fd;
 
 	i = -1;
-	if (is_builtin(data->executable) && !data->next) // Not certain if necessary
-		return(exec_builtins(data));
-	fd = malloc(sizeof(int *) * (cnt_cmd - 1));
-	while (++i < cnt_cmd - 1)
-		fd[i] = malloc(sizeof(int) * 2);
-	if (!fd || ft_create_pipe(fd, cnt_cmd))
+	if (is_builtin(data, 0) && data->count_cmd == 1)
+		return (exec_builtins(data, 0));
+	fd = malloc(sizeof(int *) * (data->count_cmd - 1));
+	while (++i < data->count_cmd - 1)
+		fd[i] = malloc(sizeof(int ) * 2);
+	if ((ft_create_pipe(fd, data)) || !fd)
 		return (1);
 	i = 0;
-	while (i < cnt_cmd)
+	while (i < data->count_cmd)
 	{
 		id[i] = fork();
 		if (id[i] == -1)
 			exit(EXIT_FAILURE);
 		else if (id[i] == 0)
-			process(data, envp);
+			process(data, envp, i, fd);
 		i++;
 	}
-	ft_close_fd(fd, cnt_cmd);
-	ft_wait_process(id, cnt_cmd);
+	ft_close_fd(fd, data);
+	ft_wait_process(id, data);
 	return (0);
 }
