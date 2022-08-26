@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 17:00:37 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 02:22:40 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 12:47:04 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_free_arr(char **arr)
 
 static char	*error_path(char *command, char *tmp, char *cmd)
 {
-	add_env("?", "127");
+	g_manager.exit_code = 127;
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(command, 2);
 	ft_putstr_fd(": command not found\n", 2);
@@ -442,23 +442,6 @@ t_list	*get_tokens(char *line, t_list *token)
 	return (token);
 }
 
-int	ft_insnewlst(t_list **is_head, char *name, char *val)
-{
-	t_env	*content;
-
-	content = malloc(sizeof(t_env));
-	if (!is_head || !name || !val || !content)
-		return (1);
-	content->name = ft_calloc(ft_strlen(name) + 1, sizeof(char));
-	content->value = ft_calloc(ft_strlen(val) + 1, sizeof(char));
-	if (!content->name || !content->value)
-		return (1);
-	content->name = ft_memcpy(content->name, name, ft_strlen(name));
-	content->value = ft_memcpy(content->value, val, ft_strlen(val) + 1);
-	ft_lstadd_back(is_head, ft_lstnew(content));
-	return (0);
-}
-
 static	int	check_empty_line(char *line)
 {
 	if (!*line)
@@ -535,7 +518,6 @@ int	pre_parse(char *line)
 	}
 	return (count_cmd);
 }
-
 int	parser(char *line, t_mshl *mini)
 {
 	t_list	*tokens;
@@ -544,7 +526,7 @@ int	parser(char *line, t_mshl *mini)
 	mini->count_cmd = pre_parse(line);
 	if (mini->count_cmd == -1)
 	{
-		add_env("?", "1");
+		g_manager.exit_code = 1;
 		return (1);
 	}
 	tokens = get_tokens(line, tokens);

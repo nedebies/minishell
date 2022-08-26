@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 02:49:40 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 12:51:10 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,19 @@
 # define MINISHELL_H
 
 # include "./libft/libft.h"
+# include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include <fcntl.h>
-# include <stdio.h>
-# include <signal.h>
-# include <readline/readline.h>
+# include <curses.h>
 # include <readline/history.h>
-# include <sys/errno.h>
-# include <sys/types.h>
+# include <readline/readline.h>
 # include <sys/wait.h>
+# include <signal.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# include <string.h>
+# include <limits.h>
+# include <errno.h>
 # include <termios.h>
 
 # define READ 0
