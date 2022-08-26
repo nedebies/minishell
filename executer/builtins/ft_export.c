@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:38:03 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:13:49 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:57:50 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	ft_check_name(char *name)
 	return (0);
 }
 
-int	add_value(char *name, t_mshl *d, int num_cmd, int i)
+int	add_value(char *name, t_shell *d, int num_cmd, int i)
 {
 	char	*value;
 
@@ -78,7 +78,7 @@ int	add_value(char *name, t_mshl *d, int num_cmd, int i)
 	return (i);
 }
 
-void	ft_builtin_export(t_mshl *data, int num_cmd)
+void	ft_builtin_export(t_shell *data, int num_cmd)
 {
 	int		i;
 	char	*name;

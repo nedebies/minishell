@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:25:41 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 15:04:36 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,15 @@
 # include <errno.h>
 # include <termios.h>
 
-typedef struct s_redir{
-	char	*name;
-	char	mode;
-}				t_redir;
-
 # define MODE_APPEND 1
 # define MODE_READ 2
 # define MODE_WRITE 3
 # define MODE_HEREDOC 4
 
-# define DEF_CD 1
-# define DEF_PWD 2
-# define DEF_ECHO 3
-# define DEF_ENV 4
-# define DEF_EXIT 5
-# define DEF_UNSET 6
-# define DEF_EXPORT 7
+typedef struct s_redir{
+	char	*name;
+	char	mode;
+}				t_redir;
 
 typedef struct s_cmd{
 	char	*cmd;
@@ -56,18 +48,18 @@ typedef struct s_cmd{
 	t_list	*redir;
 }				t_cmd;
 
-typedef struct s_mshl{
+typedef struct s_shell{
 	t_cmd	*cmd;
 	int		count_cmd;
 	t_list	*head_env;
-}				t_mshl;
+}				t_shell;
 
 typedef struct s_env{
 	char	*name;
 	char	*value;
 }				t_env;
 
-void	ft_run_prompt(t_mshl *data);
+void	ft_run_prompt(t_shell *data);
 
 void	set_input_signals(void);
 void	signal_handler(int signo);
@@ -91,40 +83,40 @@ int		ft_isset(char c, char *set);
 
 int		ft_builtin_env(t_list **is_head_env);
 void	ft_builtin_pwd(t_list **is_head_env);
-void	ft_builtin_unset(t_mshl *data, int num_cmd);
-void	ft_builtin_export(t_mshl *data, int num_cmd);
-int		ft_builtin_cd(t_mshl *d, int num_cmd);
-void	ft_builtin_echo(t_mshl *d, int num_cmd);
-void	ft_builtin_exit(t_mshl *data, int num_cmd);
+void	ft_builtin_unset(t_shell *data, int num_cmd);
+void	ft_builtin_export(t_shell *data, int num_cmd);
+int		ft_builtin_cd(t_shell *d, int num_cmd);
+void	ft_builtin_echo(t_shell *d, int num_cmd);
+void	ft_builtin_exit(t_shell *data, int num_cmd);
 
-void	ft_exit(t_mshl *data);
+void	ft_exit(t_shell *data);
 int		ft_print_error(t_list **is_head, const char *str, int nbr);
 void	ft_print_err_export(char *str);
 
-int		parser(char *line, t_mshl *mini);
+int		parser(char *line, t_shell *mini);
 int		pre_parse(char *line);
-char	*parse_line(char *line, t_mshl *data);
+char	*parse_line(char *line, t_shell *data);
 int		put_in_mid_line(char **line, char *str, int start, int end);
 int		len_quotes(char *line, int i);
 t_list	*get_tokens(char *line, t_list *token);
-int		init_cmd(t_list *lst, t_mshl *mini);
+int		init_cmd(t_list *lst, t_shell *mini);
 void	free_cmd(t_cmd *cmd);
-void	free_mshl(t_mshl *mini);
-void	ft_init_file(t_list *lst, t_cmd *cmd, t_mshl *data);
-int		is_builtin(t_mshl *data, int num_cmd);
-int		execute_builtin(t_mshl *data, int num_cmd);
+void	free_shell(t_shell *mini);
+void	ft_init_file(t_list *lst, t_cmd *cmd, t_shell *data);
+int		is_builtin(t_shell *data, int num_cmd);
+int		execute_builtin(t_shell *data, int num_cmd);
 char	**list2mass_env(t_list *lst);
 
-int		executor(t_mshl *data);
-void	ft_close_fd(int *fd[2], t_mshl *data);
-int		ft_create_pipe(int **fd, t_mshl *data);
-void	process(t_mshl *data, char **envp, int i, int **fd);
+int		executor(t_shell *data);
+void	ft_close_fd(int *fd[2], t_shell *data);
+int		ft_create_pipe(int **fd, t_shell *data);
+void	process(t_shell *data, char **envp, int i, int **fd);
 int		heredoc(t_cmd *cmd, const char *end_file);
 int		set_exit_status(int exit_status);
 void	ft_free_arr(char **arr);
 int		ft_check_open(int fd, char *name);
 char	*join_path(char *cmd, char **path, t_list *head_env);
-int		ft_processing(pid_t	*id, t_mshl *data, char **envp);
+int		ft_processing(pid_t	*id, t_shell *data, char **envp);
 int		ft_redir(t_cmd *cmd, t_list *lst);
-void	ft_dup_fd(int i, int **fd, t_mshl *data);
+void	ft_dup_fd(int i, int **fd, t_shell *data);
 #endif

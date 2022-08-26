@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 13:06:53 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:19:29 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:57:13 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	ft_redir(t_cmd *cmd, t_list *lst)
 	return (0);
 }
 
-void	ft_init_file(t_list *lst, t_cmd *cmd, t_mshl *data)
+void	ft_init_file(t_list *lst, t_cmd *cmd, t_shell *data)
 {
 	char	*file;
 	t_redir	*redir;

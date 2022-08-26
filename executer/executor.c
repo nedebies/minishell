@@ -6,13 +6,13 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 14:28:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:11:42 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 15:16:02 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_dup_fd(int i, int **fd, t_mshl *data)
+void	ft_dup_fd(int i, int **fd, t_shell *data)
 {
 	if (i != 0)
 		dup2(fd[i - 1][0], STDIN_FILENO);
@@ -31,7 +31,7 @@ void	ft_dup_fd(int i, int **fd, t_mshl *data)
 	ft_close_fd(fd, data);
 }
 
-static char	**ft_get_path(t_mshl *data)
+static char	**ft_get_path(t_shell *data)
 {
 	char	*tmp;
 	char	**path;
@@ -41,31 +41,29 @@ static char	**ft_get_path(t_mshl *data)
 	return (path);
 }
 
-static int	cmd_with_path(t_mshl *dt, char **envp, char **path)
+static int	cmd_with_path(t_shell *dt, char **envp, char **path)
 {
 	int		i;
 
 	i = 0;
 	while (i < dt->count_cmd)
 	{
-		if (is_builtin(dt, i))
+		if (!is_builtin(dt, i))
 		{
-			i++;
-			continue ;
-		}
-		dt->cmd[i].cmd = join_path(dt->cmd[i].cmd, path, dt->head_env);
-		if (!dt->cmd[i].cmd)
-		{
-			ft_free_arr(path);
-			ft_free_arr(envp);
-			return (-1);
+			dt->cmd[i].cmd = join_path(dt->cmd[i].cmd, path, dt->head_env);
+			if (!dt->cmd[i].cmd)
+			{
+				ft_free_arr(path);
+				ft_free_arr(envp);
+				return (-1);
+			}
 		}
 		i++;
 	}
 	return (0);
 }
 
-int	executor(t_mshl *data)
+int	executor(t_shell *data)
 {
 	pid_t	*id;
 	char	**path;

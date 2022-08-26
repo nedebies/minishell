@@ -6,13 +6,13 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 23:47:01 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:19:12 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 15:08:23 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	process(t_mshl *data, char **envp, int i, int **fd)
+void	process(t_shell *data, char **envp, int i, int **fd)
 {
 	int	ret;
 
@@ -32,7 +32,7 @@ void	process(t_mshl *data, char **envp, int i, int **fd)
 	exit(EXIT_SUCCESS);
 }
 
-int	ft_create_pipe(int **fd, t_mshl *data)
+int	ft_create_pipe(int **fd, t_shell *data)
 {
 	int	i;
 
@@ -41,7 +41,7 @@ int	ft_create_pipe(int **fd, t_mshl *data)
 	{
 		if (pipe(fd[i]) == -1)
 		{
-			write(2, "error in pipe\n", 15);
+			ft_putstr_fd("error in pipe\n", 2);
 			return (1);
 		}
 		i++;
@@ -49,7 +49,7 @@ int	ft_create_pipe(int **fd, t_mshl *data)
 	return (0);
 }
 
-void	ft_close_fd(int *fd[2], t_mshl *data)
+void	ft_close_fd(int *fd[2], t_shell *data)
 {
 	int	i;
 
@@ -69,7 +69,7 @@ void	ft_close_fd(int *fd[2], t_mshl *data)
 	free(fd);
 }
 
-static void	ft_wait_process(pid_t	*id, t_mshl *data)
+static void	ft_wait_process(pid_t	*id, t_shell *data)
 {
 	int		i;
 	int		ret;
@@ -84,7 +84,7 @@ static void	ft_wait_process(pid_t	*id, t_mshl *data)
 	}
 }
 
-int	ft_processing(pid_t	*id, t_mshl *data, char **envp)
+int	ft_processing(pid_t	*id, t_shell *data, char **envp)
 {
 	int		i;
 	int		**fd;

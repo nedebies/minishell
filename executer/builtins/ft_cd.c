@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:35:59 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:13:00 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:57:42 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*ft_check_tilde(t_list **head, char *str)
 	return (ft_strjoin(ft_getenv(*head, "HOME"), str));
 }
 
-int	ft_builtin_cd(t_mshl *d, int num_cmd)
+int	ft_builtin_cd(t_shell *d, int num_cmd)
 {
 	int		err;
 	char	*new_pwd;

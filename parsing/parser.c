@@ -6,13 +6,13 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 17:00:37 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:18:27 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:57:08 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	parser(char *line, t_mshl *mini)
+int	parser(char *line, t_shell *mini)
 {
 	t_list	*tokens;
 

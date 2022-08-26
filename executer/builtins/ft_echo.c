@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:33:56 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:13:17 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:57:44 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	ft_echo_print(char *s, int flag)
 	}
 }
 
-void	ft_builtin_echo(t_mshl *d, int num_cmd)
+void	ft_builtin_echo(t_shell *d, int num_cmd)
 {
 	int	i;
 	int	flag;

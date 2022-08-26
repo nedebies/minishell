@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:38:59 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:12:38 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:57:54 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	ft_is_valid_token_unset(char *s)
 	return (1);
 }
 
-void	ft_builtin_unset(t_mshl *data, int num_cmd)
+void	ft_builtin_unset(t_shell *data, int num_cmd)
 {
 	int	i;
 

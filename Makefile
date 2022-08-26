@@ -22,7 +22,6 @@ SRCS	=	main.c \
 			./libft/ft_lstiter.c \
 			./libft/ft_putstr_fd.c \
 			./libft/ft_strnstr.c \
-			./libft/ft_strcmp.c \
 			./libft/ft_strchr.c \
 			./libft/ft_strlen.c \
 			./libft/ft_putendl_fd.c \
@@ -45,7 +44,7 @@ SRCS	=	main.c \
 			./libft/ft_lstsize.c \
 			./libft/ft_lstdelone.c \
 			./libft/ft_strlcpy.c \
-			ft_free_memory.c \
+			ft_free.c \
 			ft_signal.c \
 			error.c
 

@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 13:08:02 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:18:06 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:57:05 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	put_in_mid_line(char **line, char *str, int start, int end)
 	return (0);
 }
 
-static int	dollar(char **line, int start, t_mshl *data)
+static int	dollar(char **line, int start, t_shell *data)
 {
 	int		i;
 	char	*str;
@@ -65,7 +65,7 @@ static int	dollar(char **line, int start, t_mshl *data)
 	return (1);
 }
 
-static	int	del_quotes(char **line, int start, t_mshl *data)
+static	int	del_quotes(char **line, int start, t_shell *data)
 {
 	char	quotes;
 	char	*mid;
@@ -91,7 +91,7 @@ static	int	del_quotes(char **line, int start, t_mshl *data)
 	return (end - 2);
 }
 
-char	*parse_line(char *line, t_mshl *data)
+char	*parse_line(char *line, t_shell *data)
 {
 	int	i;
 

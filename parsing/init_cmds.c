@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 13:04:34 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:17:25 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:57:03 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	args_counter(t_list *lst)
 	return (count);
 }
 
-static char	**init_cmd_args(t_list **lst, t_mshl *data)
+static char	**init_cmd_args(t_list **lst, t_shell *data)
 {
 	int		count_args;
 	char	**args;
@@ -54,14 +54,14 @@ static char	**init_cmd_args(t_list **lst, t_mshl *data)
 	return (args);
 }
 
-static void	init_command(t_list **lst, t_mshl *data, int i)
+static void	init_command(t_list **lst, t_shell *data, int i)
 {
 	data->cmd[i].cmd = ft_strdup((*lst)->content);
 	data->cmd[i].cmd = parse_line(data->cmd[i].cmd, data);
 	data->cmd[i].arguments = init_cmd_args(lst, data);
 }
 
-int	init_cmd(t_list *lst, t_mshl *mini)
+int	init_cmd(t_list *lst, t_shell *mini)
 {
 	int		i;
 	char	*token;
