@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   process_manager.c                                  :+:      :+:    :+:   */
+/*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 23:47:01 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 02:43:10 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:19:12 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	process(t_mshl *data, char **envp, int i, int **fd)
 		exit(EXIT_FAILURE);
 	ft_dup_fd(i, fd, data);
 	if (is_builtin(data, i))
-		exec_builtins(data, i);
+		execute_builtin(data, i);
 	else if (execve(data->cmd[i].cmd, data->cmd[i].arguments, envp) == -1)
 	{
 		perror(data->cmd[i].cmd);
@@ -79,7 +79,7 @@ static void	ft_wait_process(pid_t	*id, t_mshl *data)
 	{
 		waitpid(id[i], &ret, 0);
 		ret = set_exit_status(ret);
-		ft_print_error(NULL, ret);
+		ft_print_error(&data->head_env, NULL, ret);
 		i++;
 	}
 }
@@ -91,7 +91,7 @@ int	ft_processing(pid_t	*id, t_mshl *data, char **envp)
 
 	i = -1;
 	if (is_builtin(data, 0) && data->count_cmd == 1)
-		return (exec_builtins(data, 0));
+		return (execute_builtin(data, 0));
 	fd = malloc(sizeof(int *) * (data->count_cmd - 1));
 	while (++i < data->count_cmd - 1)
 		fd[i] = malloc(sizeof(int ) * 2);

@@ -6,55 +6,75 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:33:56 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/24 10:06:24 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:13:17 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int ft_echo(char **split)
+static int	ft_is_flag_echo(char *s)
 {
-    int i;
-    int nl;
+	if (!s || *s != '-')
+		return (0);
+	s++;
+	while (*s)
+	{
+		if (*s != 'n')
+			return (0);
+		s++;
+	}
+	return (1);
+}
 
-    i = 0;
-    nl = 1;
+static void	ft_echo_print(char *s, int flag)
+{
+	if (!flag)
+		write(STDOUT_FILENO, s, ft_strlen(s));
+	else
+	{
+		write(STDOUT_FILENO, " ", 1);
+		write(STDOUT_FILENO, s, ft_strlen(s));
+	}
+}
 
-        if (!split[0])
-        {
-            write(1, "\n", 1);
-            return (0);
-        }
-        if (!ft_strncmp(split[0], "-n", 2))
-        {
-            nl = 0;
-            while(split[0][++i])
-            {
-                if (split[1][i] != 'n')
-                    throw_error_usage(split[0], split[1]);
-            }
-            if (!split[1])
-                throw_error_usage(split[0], split[2]);
-        }
-        i = 0;
-        if (nl == 1)
-        {
-            while(split[i])
-            {
-                ft_putstr_fd(split[i++], 1);
-                write(1, " ", 1);
-            }
-            write(1, "\n", 1);
-        }
-        else
-        {
-            while(split[i])
-            {
-                ft_putstr_fd(split[i], 1);
-                if (split[i + 1])
-                    write(1, " ", 1);
-                i++;
-            }
-        }
-    return (0);
+void	ft_builtin_echo(t_mshl *d, int num_cmd)
+{
+	int	i;
+	int	flag;
+
+	i = 1;
+	flag = 0;
+	if (ft_is_flag_echo(d->cmd[num_cmd].arguments[i]))
+	{
+		flag++;
+		i++;
+	}
+	while (d->cmd[num_cmd].arguments[i])
+	{
+		if (ft_strlen(d->cmd[num_cmd].arguments[i]) != 0)
+		{
+			if ((!flag && i > 1) || (flag && i > flag + 1))
+				ft_echo_print(d->cmd[num_cmd].arguments[i], 1);
+			else
+				ft_echo_print(d->cmd[num_cmd].arguments[i], 0);
+		}
+		i++;
+	}
+	if (!flag)
+		printf("\n");
+	ft_print_error(&d->head_env, NULL, 0);
+}
+
+int	ft_isset(char c, char *set)
+{
+	int	i;
+
+	i = 0;
+	while (set[i])
+	{
+		if (c == set[i])
+			return (1);
+		i++;
+	}
+	return (0);
 }

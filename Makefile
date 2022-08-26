@@ -1,18 +1,28 @@
 SRCS	=	main.c \
-			./parsing/parser_nedebies.c \
-			./executer/ft_executer.c \
-			./executer/process_manager.c \
-			./executer/builtins/ft_builtins_manager.c \
-			./executer/builtins/ft_echo.c \
+			./env/ft_environs.c \
+			./env/ft_sort_env.c \
+			./parsing/parser.c \
+			./parsing/pre_parser.c \
+			./parsing/init_cmds.c \
+			./parsing/redir.c \
+			./parsing/parse_line.c \
+			./lexer/tokens.c \
+			./executer/executor.c \
+			./executer/executor_utils.c \
+			./executer/process.c \
+			./executer/builtins/builtins.c \
 			./executer/builtins/ft_cd.c \
-			./executer/builtins/ft_pwd.c \
-			./executer/builtins/ft_export.c \
+			./executer/builtins/ft_echo.c \
 			./executer/builtins/ft_env.c \
-			./executer/builtins/ft_unset.c \
 			./executer/builtins/ft_exit.c \
-			./env/envp_manager.c \
+			./executer/builtins/ft_export.c \
+			./executer/builtins/ft_pwd.c \
+			./executer/builtins/ft_unset.c \
+			./libft/ft_atoi.c \
+			./libft/ft_lstiter.c \
 			./libft/ft_putstr_fd.c \
 			./libft/ft_strnstr.c \
+			./libft/ft_strcmp.c \
 			./libft/ft_strchr.c \
 			./libft/ft_strlen.c \
 			./libft/ft_putendl_fd.c \
@@ -35,6 +45,7 @@ SRCS	=	main.c \
 			./libft/ft_lstsize.c \
 			./libft/ft_lstdelone.c \
 			./libft/ft_strlcpy.c \
+			ft_free_memory.c \
 			ft_signal.c \
 			error.c
 

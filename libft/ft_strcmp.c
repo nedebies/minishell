@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/05 12:36:57 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:12:18 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/26 14:26:41 by nedebies          #+#    #+#             */
+/*   Updated: 2022/08/26 14:34:07 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "libft.h"
 
-void	ft_builtin_pwd(t_list **is_head_env)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	char	*str;
+	int	i;
 
-	str = ft_getenv(*is_head_env, "PWD");
-	if (str)
-		printf("%s\n", str);
-	ft_print_error(is_head_env, NULL, 0);
+	i = 0;
+	while (*(s1 + i) && *(s1 + i) == *(s2 + i))
+		i++;
+	return (*((unsigned char *)s1 + i) - *((unsigned char *)s2 + i));
 }

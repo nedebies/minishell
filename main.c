@@ -6,62 +6,69 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 03:03:18 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:28:58 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void exit_main(char *str)
+static void	ft_main_exit(char *line_read, t_mshl *data)
 {
-	if (!str)
-	{
-		ft_putstr_fd("exit\n", STDERR_FILENO);
-		free(str);
-		exit(EXIT_SUCCESS);
-	}
+	ft_putstr_fd("exit\n", 1);
+	free(line_read);
+	ft_exit(data);
 }
 
-static void	init_env(int ac, char **av, char **envp)
+void	ft_run_prompt(t_mshl *data)
 {
-	if (ac > 1)
-		throw_error_exit(av[1], strerror(ENOENT), EXIT_ENOENT);
-	while (*envp)
-	{
-		add_env(get_env_name(*envp), get_env_value(*envp));
-		envp++;
-	}
-}
+	char	*line_read;
 
-int main(int ac, char **av, char **envp)
-{
-	char 	*str;
-	t_mshl	*cmds;
-
-//	t_cmnd	*cmnd_tab;
-// 		cmnd_tab = parse_nopipes(cmd);
-	cmds = NULL;
-	init_env(ac, av, envp);
-	while (ac > 0)
+	while (1)
 	{
-		init_signal();
-		str = readline("\001\033[1;92m\002not-bash> \001\033[0m\002");
-		signal(SIGINT, &handle_sigint2);
-		if (!str)
-			exit_main(str);
-		if (!ft_strlen(str))
-			free(str);
-		else
+		set_input_signals();
+		line_read = readline("\001\033[1;92m\002minishell> \001\033[0m\002");
+		signal(SIGINT, &signal_handler2);
+		if (!line_read)
+			ft_main_exit(line_read, data);
+		if (!ft_strlen(line_read))
 		{
-			add_history(str);
-			if (parser(str, cmds))
-				free(str);
-			else
-			{
-				ft_executer(cmds);
-				//free_mshl(cmnd);
-			}
+			free(line_read);
+			continue ;
 		}
+		add_history(line_read);
+		if (parser(line_read, data))
+		{
+			free(line_read);
+			continue ;
+		}
+		executor(data);
+		free_mshl(data);
 	}
-	return (EXIT_SUCCESS);
+}
+
+void	ft_exit(t_mshl *data)
+{
+	int	nbr;
+
+	nbr = ft_atoi(ft_getenv(data->head_env, "?"));
+	if (data->head_env)
+		ft_free_env(&data->head_env);
+	if (data->cmd && data->count_cmd > 0)
+		free_mshl(data);
+	exit(nbr);
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	t_mshl		data;
+
+	(void)ac;
+	(void)av;
+	data.head_env = ft_init_env(envp);
+	if (!data.head_env)
+		return (0);
+	rl_catch_signals = 0;
+	ft_putenv(&data.head_env, "?", "0");
+	ft_run_prompt(&data);
+	return (0);
 }

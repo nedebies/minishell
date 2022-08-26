@@ -6,39 +6,73 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:41:01 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 02:50:55 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:12:04 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static int      only_digits(char *s)
+static int	ft_isnumber(char *str)
 {
-        int i;
+	int	i;
 
-        i = -1;
-        if (check_option(s) == EXIT_FAILURE)
-                i = 0;
-        while(s[++i])
-        {
-                if(!ft_isdigit(s[i]))
-                        return(0);
-        }
-        return (1);
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
-int ft_exit(char **av)
+static void	ft_return_error_isnum(t_mshl *data, int num_cmd, int i)
 {
-        int     arg;
-        arg = 0;
-        while (av[arg])
-                arg++;
-        ft_putstr_fd("exit\n", 1);
-	if (av[0] && !only_digits(av[0]))
-		return (throw_error("exit", *av, "numeric argument required"));
-        if (arg > 2)
-		return (throw_error("exit", 0, "too many arguments"));
-        free_env();
-        ft_free_arr(av);
-        exit(EXIT_SUCCESS);
+	printf("exit: %s : numeric positive argument required\n", \
+			data->cmd[num_cmd].arguments[i]);
+	ft_print_error(&data->head_env, NULL, 1);
+}
+
+static void	ft_return_error_args(t_mshl *data)
+{
+	printf("exit: too many arguments\n");
+	ft_print_error(&data->head_env, NULL, 1);
+}
+
+static void	ft_set_retcode(t_mshl *data, int num_cmd)
+{
+	if (ft_atoi(data->cmd[num_cmd].arguments[1]) > 255)
+		ft_print_error(&data->head_env, NULL, 255);
+	else
+		ft_print_error(&data->head_env, NULL, \
+						ft_atoi(data->cmd[num_cmd].arguments[1]));
+}
+
+void	ft_builtin_exit(t_mshl *data, int num_cmd)
+{
+	int	i;
+	int	num_flags;
+
+	i = 1;
+	num_flags = 0;
+	while (data->cmd[num_cmd].arguments[i])
+	{
+		if (!ft_isnumber(data->cmd[num_cmd].arguments[i]))
+		{
+			ft_return_error_isnum(data, num_cmd, i);
+			return ;
+		}
+		num_flags++;
+		i++;
+	}
+	if (num_flags > 1)
+	{
+		ft_return_error_args(data);
+		return ;
+	}
+	if (i > 1)
+		ft_set_retcode(data, num_cmd);
+	ft_exit(data);
 }

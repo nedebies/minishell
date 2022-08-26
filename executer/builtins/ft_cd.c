@@ -6,55 +6,59 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:35:59 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/24 10:05:25 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/26 14:13:00 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static int	change_pwd(t_env *pwd)
+int	ft_update_dir(t_list **head)
 {
-	char	*tmp;
+	int		err;
+	char	*new_pwd;
 
-	if (!pwd)
-		return (EXIT_FAILURE);
-	tmp = pwd->value;
-	pwd->value = getcwd(NULL, 0);
-	if (!pwd->value)
-		return (throw_error_exit("getcwd", strerror(errno), EXIT_FAILURE));
-	if (tmp)
-		free(tmp);
-	return (EXIT_SUCCESS);
+	err = 0;
+	ft_print_error(head, NULL, 0);
+	err = ft_putenv(head, "OLDPWD", ft_getenv(*head, "PWD"));
+	if (!err)
+	{
+		new_pwd = getcwd(NULL, 0);
+		err = ft_putenv(head, "PWD", new_pwd);
+		free(new_pwd);
+	}
+	return (err);
 }
 
-static int	cd_home(void)
+char	*ft_check_tilde(t_list **head, char *str)
 {
-	t_env	*ptr;
-	char	*home;
-	int		exit_code;
-
-	ptr = get_env("HOME");
-	if (!ptr)
-		return (throw_error("cd", NULL, strerror(errno)));
-	home = ptr->value;
-	exit_code = chdir(home);
-	if (exit_code < 0)
-		return (throw_error("cd", NULL, strerror(errno)));
-	exit_code = change_pwd(get_env("PWD"));
-	return (EXIT_SUCCESS);
+	if (!ft_strlen(str) || *str != '~' || !ft_getenv(*head, "HOME"))
+		return (ft_strdup(str));
+	str++;
+	return (ft_strjoin(ft_getenv(*head, "HOME"), str));
 }
 
-int	ft_cd(char **argv)
+int	ft_builtin_cd(t_mshl *d, int num_cmd)
 {
-	int	exit_code;
+	int		err;
+	char	*new_pwd;
 
-	if (!*(argv))
-		return (cd_home());
-	if (check_option(*(argv)) == EXIT_FAILURE)
-		return (throw_error_usage("cd", *(argv + 1)));
-	exit_code = chdir(*(argv));
-	if (exit_code < 0)
-		return (throw_error("cd", *(argv + 1), strerror(errno)));
-	exit_code = change_pwd(get_env("PWD"));
-	return (exit_code);
+	if (!d || !d->head_env || !d->cmd[num_cmd].arguments[0])
+		return (1);
+	if (!ft_strlen(d->cmd[num_cmd].arguments[1]))
+		err = chdir(ft_getenv(d->head_env, "HOME"));
+	else
+	{
+		new_pwd = ft_check_tilde(&d->head_env, d->cmd[num_cmd].arguments[1]);
+		err = chdir(new_pwd);
+		if (new_pwd)
+			free(new_pwd);
+	}
+	if (err)
+		ft_print_error(&d->head_env, d->cmd[num_cmd].arguments[1], -1);
+	else
+	{
+		err = ft_update_dir(&d->head_env);
+		ft_print_error(&d->head_env, NULL, 0);
+	}
+	return (err);
 }
