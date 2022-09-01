@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 23:47:01 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 15:08:23 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/31 23:55:03 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	ft_processing(pid_t	*id, t_shell *data, char **envp)
 	int		**fd;
 
 	i = -1;
-	if (is_builtin(data, 0) && data->count_cmd == 1)
+	if (is_builtin(data, 0) == 2 && data->count_cmd == 1)
 		return (execute_builtin(data, 0));
 	fd = malloc(sizeof(int *) * (data->count_cmd - 1));
 	while (++i < data->count_cmd - 1)
