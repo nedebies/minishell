@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/26 13:06:53 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:57:13 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/26 17:55:53 by nedebies          #+#    #+#             */
+/*   Updated: 2022/09/01 23:04:14 by odan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	read_heredoc(const char *end, int *fd)
+/** PIPEX BONUS PART **/
+static int	read_heredoc(const char *end, int *fd)
 {
 	char	*line;
 
@@ -33,7 +34,8 @@ int	read_heredoc(const char *end, int *fd)
 	exit(EXIT_SUCCESS);
 }
 
-int	heredoc(t_cmd *cmd, const char *end_file)
+/** PIPEX BONUS PART **/
+static int	heredoc(t_cmnd *cmd, const char *end_file)
 {
 	int				fd[2];
 	pid_t			id;
@@ -42,6 +44,8 @@ int	heredoc(t_cmd *cmd, const char *end_file)
 
 	attr_out = (struct termios *)malloc(sizeof(struct termios));
 	attr_in = (struct termios *)malloc(sizeof(struct termios));
+	if (!attr_out || !attr_in)
+		return (0);
 	pipe(fd);
 	tcgetattr(STDOUT_FILENO, attr_out);
 	tcgetattr(STDIN_FILENO, attr_in);
@@ -60,7 +64,8 @@ int	heredoc(t_cmd *cmd, const char *end_file)
 	return (0);
 }
 
-static void	ft_check_fd(t_cmd *cmd, t_redir	**rd, t_list *lst)
+/** Check the redir rights of the processes according to their fd **/
+static void	ft_check_fd(t_cmnd *cmd, t_redir **rd, t_list *lst)
 {
 	*rd = lst->content;
 	if ((*rd)->mode == MODE_READ || (*rd)->mode == MODE_HEREDOC)
@@ -75,7 +80,8 @@ static void	ft_check_fd(t_cmd *cmd, t_redir	**rd, t_list *lst)
 	}
 }
 
-int	ft_redir(t_cmd *cmd, t_list *lst)
+/** Check if the redir are going in a existing file. If not, create it **/
+int	ft_redir(t_cmnd *cmd, t_list *lst)
 {
 	t_redir	*rd;
 
@@ -90,14 +96,17 @@ int	ft_redir(t_cmd *cmd, t_list *lst)
 			cmd->out_file = open(rd->name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else if (rd->mode == MODE_HEREDOC)
 			heredoc(cmd, rd->name);
-		if (ft_check_open(cmd->in_file, rd->name) || ft_check_open(cmd->out_file, rd->name))
+		if (ft_no_file_dir(cmd->in_file, rd->name))
+			return (1);
+		else if (ft_no_file_dir(cmd->out_file, rd->name))
 			return (1);
 		lst = lst->next;
 	}
 	return (0);
 }
 
-void	ft_init_file(t_list *lst, t_cmd *cmd, t_shell *data)
+/** Check the redir type to set the redir struct **/
+void	ft_init_file(t_list *lst, t_cmnd *cmd, t_shell *data)
 {
 	char	*file;
 	t_redir	*redir;
@@ -105,7 +114,9 @@ void	ft_init_file(t_list *lst, t_cmd *cmd, t_shell *data)
 	if (!lst)
 		return ;
 	redir = malloc(sizeof(t_redir));
-	lst->next->content = parse_line(lst->next->content, data);
+	if (!redir)
+		return ;
+	lst->next->content = parse_line(lst->next->content, data, -1);
 	file = lst->next->content;
 	if (!ft_strncmp(lst->content, "<<", 3))
 		redir->mode = MODE_HEREDOC;

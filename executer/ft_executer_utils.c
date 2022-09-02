@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor_utils.c                                   :+:      :+:    :+:   */
+/*   ft_executer_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/26 14:10:55 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:11:16 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/26 17:52:21 by nedebies          #+#    #+#             */
+/*   Updated: 2022/09/02 14:27:38 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ void	ft_free_arr(char **arr)
 	free(arr);
 }
 
-static char	*error_path(t_list *head_env, char *command, char *tmp, char *cmd)
+static char	*error_path(t_shell *dt, char *command, char *tmp, char *cmd)
 {
-	ft_putenv(&head_env, "?", "127");
-	ft_putstr_fd("minishell: ", 2);
+	dt->exit_code = 127;
+	ft_putstr_fd("not-bash: ", 2);
 	ft_putstr_fd(command, 2);
 	ft_putstr_fd(": command not found\n", 2);
 	free(command);
@@ -50,7 +50,7 @@ static char	*error_path(t_list *head_env, char *command, char *tmp, char *cmd)
 	return (NULL);
 }
 
-char	*join_path(char *cmd, char **path, t_list *head_env)
+char	*join_path(char *cmd, char **path, t_shell *dt)
 {
 	int		i;
 	char	*tmp;
@@ -61,6 +61,13 @@ char	*join_path(char *cmd, char **path, t_list *head_env)
 		return (NULL);
 	if (access(cmd, X_OK) == 0)
 		return (cmd);
+	if (access(cmd, F_OK) != 0 && ft_strchr(cmd, '/'))
+	{
+		ft_no_file_dir(-1, cmd);
+		return (NULL);
+	}
+	if (access(cmd, X_OK) != 0 && access(cmd, F_OK) == 0 && ft_strchr(cmd, '/'))
+		return (permission_error(cmd, dt));
 	command = ft_strdup(cmd);
 	tmp = ft_strjoin("/", cmd);
 	free(cmd);
@@ -68,24 +75,28 @@ char	*join_path(char *cmd, char **path, t_list *head_env)
 	while (path[i] && access(cmd, X_OK) != 0)
 	{
 		free(cmd);
-		cmd = ft_strjoin(path[i], tmp);
-		i++;
+		cmd = ft_strjoin(path[i++], tmp);
 	}
 	if (path[i] == NULL)
-		return (error_path(head_env, command, tmp, cmd));
+		return (error_path(dt, command, tmp, cmd));
 	free(command);
 	free(tmp);
 	return (cmd);
 }
 
-int	ft_check_open(int fd, char *name)
+void	ft_close_fd(int *fd[2], t_shell *data)
 {
-	if (fd == -1)
+	int	i;
+
+	i = 0;
+	while (i < data->count_cmd - 1)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(name, 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-		return (1);
+		close(fd[i][0]);
+		close(fd[i][1]);
+		i++;
 	}
-	return (0);
+	i = 0;
+	while (i < data->count_cmd - 1)
+		free(fd[i++]);
+	free(fd);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/26 14:16:03 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:16:16 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/26 17:48:02 by nedebies          #+#    #+#             */
+/*   Updated: 2022/08/26 18:45:23 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	ft_comp(char *one, char *two)
 	return (0);
 }
 
-static void	ft_bubble_sort(t_env **is_head_env, int nbr)
+static void	ft_bubble_sort(t_env **is_envp_list, int nbr)
 {
 	t_env	*ls_tmp;
 	int		swapped;
@@ -42,11 +42,11 @@ static void	ft_bubble_sort(t_env **is_head_env, int nbr)
 		i = 0;
 		while (i < nbr - 1)
 		{
-			if (ft_comp(is_head_env[i]->name, is_head_env[i + 1]->name))
+			if (ft_comp(is_envp_list[i]->name, is_envp_list[i + 1]->name))
 			{
-				ls_tmp = is_head_env[i];
-				is_head_env[i] = is_head_env[i + 1];
-				is_head_env[i + 1] = ls_tmp;
+				ls_tmp = is_envp_list[i];
+				is_envp_list[i] = is_envp_list[i + 1];
+				is_envp_list[i + 1] = ls_tmp;
 				swapped = 1;
 			}
 			i++;
@@ -54,24 +54,24 @@ static void	ft_bubble_sort(t_env **is_head_env, int nbr)
 	}
 }
 
-t_env	**ft_sortenv(t_list **is_head_env)
+t_env	**ft_sortenv(t_list **is_envp_list)
 {
-	t_env	**ls_head_env;
+	t_env	**ls_envp_list;
 	t_list	*ls_cur_env;
 	int		i;
 
 	i = 0;
-	ls_head_env = calloc(ft_lstsize(*is_head_env) + 1, sizeof(t_env *));
-	if (!ls_head_env)
+	ls_envp_list = calloc(ft_lstsize(*is_envp_list) + 1, sizeof(t_env *));
+	if (!ls_envp_list)
 		return (NULL);
-	ls_cur_env = *is_head_env;
+	ls_cur_env = *is_envp_list;
 	while (ls_cur_env)
 	{
-		ls_head_env[i] = (t_env *)(ls_cur_env->content);
+		ls_envp_list[i] = (t_env *)(ls_cur_env->content);
 		i++;
 		ls_cur_env = ls_cur_env->next;
 	}
-	ls_head_env[i] = NULL;
-	ft_bubble_sort(ls_head_env, ft_lstsize(*is_head_env));
-	return (ls_head_env);
+	ls_envp_list[i] = NULL;
+	ft_bubble_sort(ls_envp_list, ft_lstsize(*is_envp_list));
+	return (ls_envp_list);
 }

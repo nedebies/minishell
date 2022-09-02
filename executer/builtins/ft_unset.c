@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:38:59 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:57:54 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/01 20:09:31 by odan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,12 @@ void	ft_del_var_env(void *lst)
 	free(ls_node_env);
 }
 
-static void	ft_unset_var_env(t_list **is_head_env, char *str)
+void	ft_unset_var_env(t_list **is_envp_list, char *str)
 {
 	t_list	**ls_current;
 	t_list	*ls_next;
-	int		i;
 
-	i = 0;
-	ls_current = is_head_env;
+	ls_current = is_envp_list;
 	while (*ls_current)
 	{
 		if (ft_namecmp(*ls_current, str))
@@ -51,7 +49,6 @@ static void	ft_unset_var_env(t_list **is_head_env, char *str)
 			*ls_current = ls_next;
 			break ;
 		}
-		i++;
 		ls_current = &(*ls_current)->next;
 	}
 }
@@ -67,25 +64,19 @@ static int	ft_is_valid_token_unset(char *s)
 	return (1);
 }
 
-void	ft_builtin_unset(t_shell *data, int num_cmd)
+void	ft_unset(t_shell *data, int num_cmd)
 {
 	int	i;
 
-	if (!data->cmd[num_cmd].arguments)
+	if (!data->cmd[num_cmd].args)
 		return ;
 	i = 1;
-	while (data->cmd[num_cmd].arguments[i])
+	while (data->cmd[num_cmd].args[i])
 	{
-		if (ft_is_valid_token_unset(data->cmd[num_cmd].arguments[i]))
-			ft_unset_var_env(&data->head_env, data->cmd[num_cmd].arguments[i]);
+		if (ft_is_valid_token_unset(data->cmd[num_cmd].args[i]))
+			ft_unset_var_env(&data->envp_list, data->cmd[num_cmd].args[i++]);
 		else
-		{
-			printf("unset : \'%s\': not a valid identifier\n", \
-					data->cmd[num_cmd].arguments[i]);
-			ft_print_error(&data->head_env, NULL, 1);
-			break ;
-		}
-		i++;
+			printf("not-bash: unset: `%s': not a valid identifier\n", data->cmd[num_cmd].args[i++]);
 	}
 	return ;
 }

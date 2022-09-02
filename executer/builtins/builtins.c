@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 11:29:03 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 15:04:07 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/01 17:09:57 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ int	is_builtin(t_shell *data, int num_cmd)
 	if (ft_strncmp(data->cmd[num_cmd].cmd, "cd", 3) == 0)
 		return (1);
 	else if (ft_strncmp(data->cmd[num_cmd].cmd, "pwd", 4) == 0)
-		return (1);
+		return (2);
 	else if (ft_strncmp(data->cmd[num_cmd].cmd, "echo", 5) == 0)
-		return (1);
+		return (2);
 	else if (ft_strncmp(data->cmd[num_cmd].cmd, "env", 4) == 0)
-		return (1);
+		return (2);
 	else if (ft_strncmp(data->cmd[num_cmd].cmd, "exit", 5) == 0)
 		return (1);
 	else if (ft_strncmp(data->cmd[num_cmd].cmd, "unset", 6) == 0)
@@ -35,20 +35,20 @@ int	is_builtin(t_shell *data, int num_cmd)
 
 int	execute_builtin(t_shell *data, int num_cmd)
 {
-	if (!ft_strncmp(data->cmd[num_cmd].arguments[0], "pwd", 3))
-		ft_builtin_pwd(&data->head_env);
-	else if (!ft_strncmp(data->cmd[num_cmd].arguments[0], "echo", 4))
-		ft_builtin_echo(data, num_cmd);
-	else if (!ft_strncmp(data->cmd[num_cmd].arguments[0], "cd", 2))
-		ft_builtin_cd(data, num_cmd);
-	else if (!ft_strncmp(data->cmd[num_cmd].arguments[0], "env", 3))
-		ft_builtin_env(&data->head_env);
-	else if (!ft_strncmp(data->cmd[num_cmd].arguments[0], "export", 6))
-		ft_builtin_export(data, num_cmd);
-	else if (!ft_strncmp(data->cmd[num_cmd].arguments[0], "unset", 5))
-		ft_builtin_unset(data, num_cmd);
-	else if (!ft_strncmp(data->cmd[num_cmd].arguments[0], "exit", 4))
-		ft_builtin_exit(data, num_cmd);
+	if (!ft_strncmp(data->cmd[num_cmd].args[0], "pwd", 3))
+		ft_pwd(data);
+	else if (!ft_strncmp(data->cmd[num_cmd].args[0], "echo", 4))
+		ft_echo(data, num_cmd);
+	else if (!ft_strncmp(data->cmd[num_cmd].args[0], "cd", 2))
+		ft_cd(data, num_cmd);
+	else if (!ft_strncmp(data->cmd[num_cmd].args[0], "env", 3))
+		ft_env(&data->envp_list);
+	else if (!ft_strncmp(data->cmd[num_cmd].args[0], "export", 6))
+		ft_export(data, num_cmd);
+	else if (!ft_strncmp(data->cmd[num_cmd].args[0], "unset", 5))
+		ft_unset(data, num_cmd);
+	else if (!ft_strncmp(data->cmd[num_cmd].args[0], "exit", 4))
+		ft_exit(data, num_cmd);
 	return (EXIT_SUCCESS);
 }
 
@@ -63,7 +63,7 @@ static char	*ft_join_env(t_env *env)
 	return (str_env);
 }
 
-char	**list2mass_env(t_list *lst)
+char	**get_envp(t_list *lst)
 {
 	int		i;
 	int		size;
@@ -72,6 +72,8 @@ char	**list2mass_env(t_list *lst)
 
 	size = ft_lstsize(lst) + 1;
 	mass = malloc(size * sizeof(char *));
+	if (!mass)
+		return (NULL);
 	i = 0;
 	while (lst && i < size)
 	{

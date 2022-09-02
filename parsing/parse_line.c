@@ -3,29 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/26 13:08:02 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:57:05 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/26 17:55:08 by nedebies          #+#    #+#             */
+/*   Updated: 2022/08/31 14:03:07 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	is_end(int c)
-{
-	if (c == '_')
-		return (0);
-	if (ft_isalpha(c))
-		return (0);
-	if (ft_isdigit(c))
-		return (0);
-	if (c == '?')
-		return (0);
-	return (1);
-}
-
-int	put_in_mid_line(char **line, char *str, int start, int end)
+static int	put_in_mid_line(char **line, char *str, int start, int end)
 {
 	char	*head;
 	char	*tail;
@@ -54,7 +41,7 @@ static int	dollar(char **line, int start, t_shell *data)
 	while ((*line)[start + i + 1] && !(is_end((*line)[start + i + 1])))
 		i++;
 	tmp = ft_substr(*line, start + 1, i);
-	str = ft_getenv(data->head_env, tmp);
+	str = ft_getenv(data->envp_list, tmp);
 	if (!str)
 	{
 		free(tmp);
@@ -65,7 +52,7 @@ static int	dollar(char **line, int start, t_shell *data)
 	return (1);
 }
 
-static	int	del_quotes(char **line, int start, t_shell *data)
+static	int	del_quotes(char **line, int start, t_shell *data, int flag)
 {
 	char	quotes;
 	char	*mid;
@@ -86,23 +73,39 @@ static	int	del_quotes(char **line, int start, t_shell *data)
 			end++;
 	}
 	mid = ft_substr(*line, start + 1, end - start - 1);
+	if (flag)
+		*line -= 1;
 	put_in_mid_line(line, mid, start, end);
 	free(mid);
 	return (end - 2);
 }
 
-char	*parse_line(char *line, t_shell *data)
+static int	dollar_quotes(char **line, int start, t_shell *data)
 {
 	int	i;
 
 	i = 0;
+	*line += 1;
+	i = del_quotes(line, start, data, 1);
+	return (i);
+}
+
+/** Deal with metachar (quotes and $) in the line **/
+char	*parse_line(char *line, t_shell *data, int i)
+{
 	if (!*line)
 		return (NULL);
-	while (line[i])
+	while (line[++i])
 	{
-		if (line[i] == '\'' || line[i] == '\"')
+		if (line[i] == '$' && (line[i + 1] == '\'' || line[i + 1] == '\"'))
 		{
-			i = del_quotes(&line, i, data);
+			i = dollar_quotes(&line, i, data);
+			if (i == -1)
+				break ;
+		}
+		else if (line[i] == '\'' || line[i] == '\"')
+		{
+			i = del_quotes(&line, i, data, 0);
 			if (i == -1)
 				break ;
 		}
@@ -112,7 +115,6 @@ char	*parse_line(char *line, t_shell *data)
 			if (i == -1)
 				break ;
 		}
-		i++;
 	}
 	return (line);
 }

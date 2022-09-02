@@ -3,52 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 15:14:59 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/01 23:01:40 by odan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_exit(t_shell *data)
+void	ft_exit_minishell(t_shell *data)
 {
-	int	nbr;
-
-	nbr = ft_atoi(ft_getenv(data->head_env, "?"));
-	if (data->head_env)
-		ft_free_env(&data->head_env);
+	if (data->envp_list)
+		ft_free_env(&data->envp_list);
 	if (data->cmd && data->count_cmd > 0)
 		free_shell(data);
-	exit(nbr);
+	exit(data->exit_code);
 }
 
-static void	ft_main_exit(char *str, t_shell *data)
-{
-	ft_putstr_fd("exit\n", 1);
-	free(str);
-	ft_exit(data);
-}
-
-void	ft_run_prompt(t_shell *data)
+static void	ft_prompt(int ac, t_shell *shell)
 {
 	char	*str;
 
-	while (1)
+	while (ac > 0)
 	{
 		set_input_signals();
 		str = readline("not-bash> ");
 		signal(SIGINT, &signal_handler2);
 		if (!str)
-			ft_main_exit(str, data);
+		{
+			ft_putstr_fd("exit\n", 1);
+			free(str);
+			ft_exit_minishell(shell);
+		}
 		if (ft_strlen(str))
 		{
 			add_history(str);
-			if (!parser(str, data))
+			if (!parser(str, shell))
 			{
-				executor(data);
-				free_shell(data);
+				ft_executer(shell, 0);
+				free_shell(shell);
 			}
 		}
 	}
@@ -56,15 +50,19 @@ void	ft_run_prompt(t_shell *data)
 
 int	main(int ac, char **av, char **envp)
 {
-	t_shell		data;
+	t_shell	shell;
 
-	(void)ac;
 	(void)av;
-	data.head_env = ft_init_env(envp);
-	if (!data.head_env)
+	shell.exit_code = 0;
+	if (ac > 1)
+	{
+		printf("No arguments allowed\n");
+		exit (127);
+	}
+	shell.envp_list = ft_init_env(&shell, envp);
+	if (!shell.envp_list)
 		return (0);
-	rl_catch_signals = 0;
-	ft_putenv(&data.head_env, "?", "0");
-	ft_run_prompt(&data);
+	shell.exit_code = 0;
+	ft_prompt(ac, &shell);
 	return (0);
 }

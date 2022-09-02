@@ -3,33 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:38:03 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:57:50 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/01 11:12:55 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static void	ft_print_env(t_list **is_head_env)
+static void	ft_print_env(t_list **is_envp_list)
 {
-	t_env	**ls_head_env;
+	t_env	**env_lst;
 	int		i;
 
 	i = 0;
-	ls_head_env = ft_sortenv(is_head_env);
-	while (ls_head_env && ls_head_env[i])
+	env_lst = ft_sortenv(is_envp_list);
+	while (env_lst && env_lst[i])
 	{
-		printf("declare -x ");
-		printf("%s=\"", ls_head_env[i]->name);
-		if (ft_getenv(*is_head_env, ls_head_env[i]->name))
-			printf("%s\"\n", ft_getenv(*is_head_env, ls_head_env[i]->name));
+		ft_putstr_fd("declare -x ", 1);
+		ft_putstr_fd(env_lst[i]->name, 1);
+		ft_putstr_fd("=\"", 1);
+		if (ft_getenv(*is_envp_list, env_lst[i]->name))
+		{
+			ft_putstr_fd(ft_getenv(*is_envp_list, env_lst[i]->name), 1);
+			ft_putstr_fd("\"\n", 1);
+		}
 		else
-			printf("\"\n");
+			ft_putstr_fd("\"\n", 1);
 		i++;
 	}
-	free(ls_head_env);
+	free(env_lst);
 }
 
 char	*get_name(char *s)
@@ -58,16 +62,14 @@ int	add_value(char *name, t_shell *d, int num_cmd, int i)
 
 	if (ft_check_name(name))
 	{
-		if (ft_isset('=', d->cmd[num_cmd].arguments[i]))
-			value = get_value_env(d->cmd[num_cmd].arguments[i]);
+		if (ft_isset('=', d->cmd[num_cmd].args[i]))
+			value = get_value_env(d->cmd[num_cmd].args[i]);
 		else
-			value = get_value_env(d->cmd[num_cmd].arguments[++i]);
+			value = get_value_env(d->cmd[num_cmd].args[++i]);
 		if (ft_strlen(value))
-			ft_putenv(&d->head_env, name, value);
+			ft_putenv(&d->envp_list, name, value);
 		else
 		{
-			ft_print_err_export(value);
-			ft_print_error(&d->head_env, NULL, 1);
 			free(value);
 			return (-1);
 		}
@@ -78,22 +80,22 @@ int	add_value(char *name, t_shell *d, int num_cmd, int i)
 	return (i);
 }
 
-void	ft_builtin_export(t_shell *data, int num_cmd)
+void	ft_export(t_shell *data, int num_cmd)
 {
 	int		i;
 	char	*name;
 
-	if (!data->cmd[num_cmd].arguments[1])
-		return (ft_print_env(&data->head_env));
+	if (!data->cmd[num_cmd].args[1])
+		return (ft_print_env(&data->envp_list));
 	i = 1;
-	while (ft_strlen(data->cmd[num_cmd].arguments[i]))
+	while (ft_strlen(data->cmd[num_cmd].args[i]))
 	{
-		name = get_name_env(data->cmd[num_cmd].arguments[i]);
+		name = get_name_env(data->cmd[num_cmd].args[i]);
 		i = add_value(name, data, num_cmd, i);
 		free(name);
 		if (i == -1)
 			return ;
 		i++;
 	}
-	ft_print_error(&data->head_env, NULL, 0);
+	ft_print_error(data, NULL, 0);
 }

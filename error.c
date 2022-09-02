@@ -3,26 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/15 18:09:45 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:14:42 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/01 23:04:14 by odan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_print_error(t_list **is_head, const char *str, int nbr)
+char	*permission_error(char *cmd, t_shell *dt)
 {
-	char	*name;
+	printf("not-bash: %s: permission denied\n", cmd);
+	dt->exit_code = 126;
+	return (NULL);
+}
 
+int	ft_print_error(t_shell *data, const char *str, int nbr)
+{
 	if (str)
 		perror(str);
 	if (nbr < 0)
 		nbr = EXIT_FAILURE;
-	name = ft_itoa(nbr);
-	ft_putenv(is_head, "?", name);
-	free(name);
+	data->exit_code = nbr;
 	return (nbr);
 }
 
@@ -31,4 +34,16 @@ void	ft_print_err_export(char *str)
 	ft_putstr_fd("export: \'", 2);
 	ft_putstr_fd(str, 2);
 	ft_putstr_fd("\': not a valid identifier\n", 2);
+}
+
+int	ft_no_file_dir(int fd, char *name)
+{
+	if (fd == -1)
+	{
+		ft_putstr_fd("not-bash: ", 2);
+		ft_putstr_fd(name, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		return (1);
+	}
+	return (0);
 }

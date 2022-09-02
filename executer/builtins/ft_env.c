@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:40:31 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:13:31 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/01 17:02:39 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,20 @@ void	ft_read_lst(void *lst)
 	t_env	*ls_env_node;
 
 	ls_env_node = (t_env *)(lst);
-	if (ls_env_node->name)
-		printf("%s=", ls_env_node->name);
-	if (ls_env_node->value)
-		printf("%s\n", ls_env_node->value);
+	if (ls_env_node->name && ls_env_node->value)
+	{
+		ft_putstr_fd(ls_env_node->name, STDOUT_FILENO);
+		write(STDOUT_FILENO, "=", 1);
+		ft_putstr_fd(ls_env_node->value, STDOUT_FILENO);
+		write(STDOUT_FILENO, "\n", 1);
+	}
 }
 
-int	ft_builtin_env(t_list **is_head_env)
+int	ft_env(t_list **is_envp_list)
 {
-	if (!is_head_env)
+	if (!is_envp_list)
 		return (1);
-	ft_lstiter(*is_head_env, &ft_read_lst);
-	ft_print_error(is_head_env, NULL, 0);
+	ft_lstiter(*is_envp_list, &ft_read_lst);
 	return (0);
 }
 

@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pre_parser.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: orandan <orandan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/26 12:59:49 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:26:04 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/24 23:16:40 by orandan           #+#    #+#             */
+/*   Updated: 2022/08/31 20:05:01 by orandan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/* check if line is empty or if line is only made up of spaces */
 static	int	check_empty_line(char *line)
 {
 	if (!*line)
@@ -29,21 +30,21 @@ static	int	check_empty_line(char *line)
 static char	*print_quotes_er(char quotes)
 {
 	if (quotes == '\'')
-		ft_putstr_fd("minishell: unclosed single quote error\n", 2);
+		ft_putstr_fd("not-bash: unclosed single quote error\n", 2);
 	else
-		ft_putstr_fd("minishell: unclosed double quote error\n", 2);
+		ft_putstr_fd("not bash: unclosed double quote error\n", 2);
 	return (NULL);
 }
 
 static char	*print_er(char *error)
 {
-	ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
+	ft_putstr_fd("not-bash: syntax error near unexpected token ", 2);
 	ft_putstr_fd(error, 2);
 	ft_putstr_fd("\n", 2);
 	return (NULL);
 }
 
-static char	*ft_check_sign(char *line, char quotes, int *count_cmd)
+static char	*ft_check_sign(char *line, char quotes,	int *cnt, t_shell *mini)
 {
 	if (*line == '\'' || *line == '\"')
 	{
@@ -56,34 +57,42 @@ static char	*ft_check_sign(char *line, char quotes, int *count_cmd)
 	}
 	if (*line == '|')
 	{
-		(*count_cmd)++;
+		(*cnt)++;
 		line++;
 		if (*line == '|')
-			return (print_er("`|'"));
+		{
+			print_er("`|'");
+			mini->exit_code = 258;
+			return (NULL);
+		}
 	}
 	else
 		line++;
 	return (line);
 }
 
-int	pre_parse(char *line)
+int	pre_parse(char *line, t_shell *mini)
 {
 	char	quotes;
 	int		count_cmd;
 
 	count_cmd = 1;
 	if (check_empty_line(line))
+	{
+		mini->exit_code = 0;
 		return (-1);
+	}
 	while (*line)
 	{
 		quotes = '0';
-		line = ft_check_sign(line, quotes, &count_cmd);
+		line = ft_check_sign(line, quotes, &count_cmd, mini);
 		if (!line)
 			return (-1);
 	}
 	if (*(line - 1) == '|' || *(line - 1) == '<' || *(line - 1) == '>')
 	{
 		print_er("`newline'");
+		mini->exit_code = 258;
 		return (-1);
 	}
 	return (count_cmd);

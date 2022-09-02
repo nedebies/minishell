@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_environs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/26 14:14:12 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:16:23 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/12 10:29:34 by nedebies          #+#    #+#             */
+/*   Updated: 2022/08/31 13:42:23 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_list	*ft_add2list(t_list *is_head_env, char *i_str)
+static t_list	*ft_add2list(t_list *is_envp_list, char *i_str)
 {
 	t_env	*ls_content;
 	char	**ls_val_env;
@@ -25,12 +25,12 @@ t_list	*ft_add2list(t_list *is_head_env, char *i_str)
 		return (NULL);
 	ls_content->name = ls_val_env[0];
 	ls_content->value = ls_val_env[1];
-	ft_lstadd_back(&is_head_env, ft_lstnew(ls_content));
+	ft_lstadd_back(&is_envp_list, ft_lstnew(ls_content));
 	free(ls_val_env);
-	return (is_head_env);
+	return (is_envp_list);
 }
 
-int	ft_insnewlst(t_list **is_head, char *name, char *val)
+static int	ft_insnewlst(t_list **is_head, char *name, char *val)
 {
 	t_env	*content;
 
@@ -84,21 +84,21 @@ char	*ft_getenv(t_list *is_head, char *i_str)
 	return (NULL);
 }
 
-t_list	*ft_init_env(char **env)
+t_list	*ft_init_env(t_shell *data, char **env)
 {
 	int		i;
-	t_list	*ls_head_env;
+	t_list	*ls_envp_list;
 
 	i = 0;
-	ls_head_env = NULL;
+	ls_envp_list = NULL;
 	while (env && env[i])
-		ls_head_env = ft_add2list(ls_head_env, env[i++]);
-	if (!ls_head_env || !i)
+		ls_envp_list = ft_add2list(ls_envp_list, env[i++]);
+	ft_unset_var_env(&ls_envp_list, "OLDPWD");
+	if (!ls_envp_list || !i)
 	{
-		ft_print_error(&ls_head_env, \
-		"Raised error in adding env's node to list", 0);
-		ft_free_env(&ls_head_env);
+		ft_print_error(data, "env list failed", 1);
+		ft_free_env(&ls_envp_list);
 		return (NULL);
 	}
-	return (ls_head_env);
+	return (ls_envp_list);
 }

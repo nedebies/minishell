@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_memory.c                                   :+:      :+:    :+:   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 14:15:13 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:57:17 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/31 13:47:51 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_delete_env(void *lst)
+static void	ft_delete_env(void *lst)
 {
 	t_env	*ls_env_node;
 
@@ -28,22 +28,19 @@ void	ft_free_env(t_list **is_head)
 {
 	t_list	**ls_current;
 	t_list	*ls_next;
-	int		i;
 
-	i = 0;
 	ls_current = is_head;
 	while (*ls_current)
 	{
 		ls_next = (*ls_current)->next;
 		ft_lstdelone(*ls_current, &ft_delete_env);
 		*ls_current = ls_next;
-		i++;
 	}
 	if (*is_head != NULL)
 		free(is_head);
 }
 
-void	free_redir(t_cmd *cmd)
+void	free_redir(t_cmnd *cmd)
 {
 	t_redir	*redir;
 	t_list	*start;
@@ -58,19 +55,19 @@ void	free_redir(t_cmd *cmd)
 	ft_lstclear(&start, free);
 }
 
-void	free_cmd(t_cmd *cmd)
+void	free_cmd(t_cmnd *cmd)
 {
 	int		i;
 
 	i = 0;
-	while (cmd->arguments && cmd->arguments[i])
+	while (cmd->args && cmd->args[i])
 	{
-		free (cmd->arguments[i]);
+		free (cmd->args[i]);
 		i++;
 	}
 	i = 0;
-	if (cmd->arguments)
-		free(cmd->arguments);
+	if (cmd->args)
+		free(cmd->args);
 	if (cmd->in_file)
 		close(cmd->in_file);
 	if (cmd->out_file)

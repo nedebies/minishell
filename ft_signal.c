@@ -3,22 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 22:22:35 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:19:47 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/01 23:01:37 by odan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	set_input_signals(void)
+int	ft_isset(char c, char *set)
 {
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
+	int	i;
+
+	i = 0;
+	while (set[i])
+	{
+		if (c == set[i])
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
-void	signal_handler(int signo)
+static void	signal_handler(int signo)
 {
 	if (signo == SIGINT)
 	{
@@ -29,10 +37,14 @@ void	signal_handler(int signo)
 	}
 }
 
+void	set_input_signals(void)
+{
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 void	signal_handler2(int signo)
 {
 	if (signo == SIGINT)
-	{
 		ft_putendl_fd("", 1);
-	}
 }

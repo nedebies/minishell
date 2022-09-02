@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: orandan <orandan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 20:39:28 by nedebies          #+#    #+#             */
-/*   Updated: 2021/04/28 12:34:52 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/08/28 13:15:34 by orandan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ size_t	ft_strlen(char const *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i] != '\0')
+	while (str && str[i] != '\0')
 		i++;
 	return (i);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 20:41:43 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:27:05 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/06/27 12:46:06 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ typedef struct s_list
 	struct s_list	*next;
 }				t_list;
 
-int				ft_strcmp(const char *s1, const char *s2);
 int				ft_atoi(char const *str);
 void			ft_bzero(void *str, size_t n);
 void			*ft_calloc(size_t n, size_t size);

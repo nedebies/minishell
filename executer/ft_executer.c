@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.c                                         :+:      :+:    :+:   */
+/*   ft_executer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 14:28:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 15:16:02 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/02 16:36:13 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ void	ft_dup_fd(int i, int **fd, t_shell *data)
 {
 	if (i != 0)
 		dup2(fd[i - 1][0], STDIN_FILENO);
-	if (i != data->count_cmd -1)
-		dup2(fd[i][1], STDOUT_FILENO);
 	if (data->cmd[i].in_file)
 	{
 		dup2(data->cmd[i].in_file, STDIN_FILENO);
@@ -28,6 +26,8 @@ void	ft_dup_fd(int i, int **fd, t_shell *data)
 		dup2(data->cmd[i].out_file, STDOUT_FILENO);
 		close(data->cmd[i].out_file);
 	}
+	if (i != data->count_cmd -1)
+		dup2(fd[i][1], STDOUT_FILENO);
 	ft_close_fd(fd, data);
 }
 
@@ -36,7 +36,7 @@ static char	**ft_get_path(t_shell *data)
 	char	*tmp;
 	char	**path;
 
-	tmp = ft_getenv(data->head_env, "PATH");
+	tmp = ft_getenv(data->envp_list, "PATH");
 	path = ft_split(tmp, ':');
 	return (path);
 }
@@ -50,7 +50,15 @@ static int	cmd_with_path(t_shell *dt, char **envp, char **path)
 	{
 		if (!is_builtin(dt, i))
 		{
-			dt->cmd[i].cmd = join_path(dt->cmd[i].cmd, path, dt->head_env);
+			if (!ft_getenv(dt->envp_list, "PATH"))
+			{
+				if (access(dt->cmd[i].cmd, X_OK) == 0)
+					return (0);
+				ft_no_file_dir(-1, dt->cmd[i].cmd);
+				dt->exit_code = 127;
+				return (-1);
+			}
+			dt->cmd[i].cmd = join_path(dt->cmd[i].cmd, path, dt);
 			if (!dt->cmd[i].cmd)
 			{
 				ft_free_arr(path);
@@ -63,29 +71,26 @@ static int	cmd_with_path(t_shell *dt, char **envp, char **path)
 	return (0);
 }
 
-int	executor(t_shell *data)
+int	ft_executer(t_shell *data, int ret)
 {
-	pid_t	*id;
 	char	**path;
-	int		ret;
 	char	**envp;
 
-	envp = list2mass_env(data->head_env);
+	envp = get_envp(data->envp_list);
 	path = ft_get_path(data);
 	if (!data->cmd[0].cmd)
 	{
 		ret = ft_redir(&data->cmd[0], data->cmd[0].redir);
-		ft_print_error(&data->head_env, NULL, ret);
+		ft_print_error(data, NULL, ret);
 	}
 	else
 	{
 		if (cmd_with_path(data, envp, path) == -1)
 			return (-1);
-		id = malloc(sizeof(pid_t) * data->count_cmd);
-		ft_processing(id, data, envp);
-		free(id);
+		ft_process_manager(data, -1);
 	}
-	ft_free_arr(path);
+	if (path)
+		ft_free_arr(path);
 	ft_free_arr(envp);
 	return (0);
 }

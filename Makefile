@@ -7,8 +7,8 @@ SRCS	=	main.c \
 			./parsing/redir.c \
 			./parsing/parse_line.c \
 			./lexer/tokens.c \
-			./executer/executor.c \
-			./executer/executor_utils.c \
+			./executer/ft_executer.c \
+			./executer/ft_executer_utils.c \
 			./executer/process.c \
 			./executer/builtins/builtins.c \
 			./executer/builtins/ft_cd.c \
@@ -35,7 +35,6 @@ SRCS	=	main.c \
 			./libft/ft_calloc.c \
 			./libft/ft_substr.c \
 			./libft/ft_memcpy.c \
-			./libft/ft_itoa.c \
 			./libft/ft_isalpha.c \
 			./libft/ft_memset.c \
 			./libft/ft_lstnew.c \
@@ -44,33 +43,33 @@ SRCS	=	main.c \
 			./libft/ft_lstsize.c \
 			./libft/ft_lstdelone.c \
 			./libft/ft_strlcpy.c \
+			./libft/ft_putnbr_fd.c \
 			ft_free.c \
 			ft_signal.c \
 			error.c
 
-OBJS	= $(SRCS:.c=.o)
-
-NAME	= minishell
-
-CC	= gcc
-
-FLAGS	= -Wall -Wextra -Werror -I ~/.brew/opt/readline/include -g
-
-INC		= -lreadline
-
+NAME := minishell
+CC := gcc
+CFLAGS := -Werror -Wall -Wextra -g
+RDL_PATH := -L/Users/$(USER)/.brew/opt/readline/lib/
+RDL_HISTORY_PATH := -L/Users/$(USER)/.brew/opt/readline/lib/
+RDL := -lreadline.8.1 $(RDL_PATH)
+RDL_HISTORY := -lhistory.8.1 $(RDL_HISTORY_PATH)
+READLINE := $(RDL) $(RDL_HISTORY)
 HEADER	= minishell.h
+RM := rm -rf
+OBJ_FILES := $(SRCS:.c=.o)
 
-all:	$(NAME)
 
-%.o: %.c $(HEADER)
-	@${CC} ${FLAGS} -c $< -o $@
+all: $(NAME)
 
-$(NAME): $(OBJS)
-	@$(CC) $(FLAGS) -o $(NAME) $(OBJS) $(INC)
-	@echo "Compilation completed.\n./minishell is ready to use !"
+$(NAME): $(OBJ_FILES)
+		@$(CC) $(CFLAGS) $(OBJ_FILES) $(READLINE) -o $(NAME)
+		@echo "Minishell compiled\n"
+		@echo "Simply type ./minishell to execute the program. Enjoy.\n\n"
 
 clean:
-	@rm -f $(OBJS)
+	@rm -f $(OBJ_FILES)
 	@echo "All <file>.o are removed."
 
 fclean: clean

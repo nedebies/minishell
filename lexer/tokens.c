@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/26 13:02:40 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:20:38 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/11 16:54:46 by hdony             #+#    #+#             */
+/*   Updated: 2022/08/31 13:41:17 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	len_quotes(char *line, int i)
 	return (len + 1);
 }
 
+/* check the len of tokens (< or <<, len of words between quotes) */
 static int	len_token(char *line, int i)
 {
 	int	len;
@@ -54,6 +55,7 @@ static int	len_token(char *line, int i)
 	return (len);
 }
 
+/** Skip spaces in front of the line & lex the line into tokens **/
 t_list	*get_tokens(char *line, t_list *token)
 {
 	int		len;

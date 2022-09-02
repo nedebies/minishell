@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/26 13:04:34 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/26 14:57:03 by nedebies         ###   ########.fr       */
+/*   Created: 2022/08/26 17:55:36 by nedebies          #+#    #+#             */
+/*   Updated: 2022/09/02 13:16:45 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	args_counter(t_list *lst)
 	{
 		token = lst->content;
 		if (*token == '<' || *token == '>')
-			break ;
+			count = count - 1;
 		if (*token == '|')
 			break ;
 		lst = lst->next;
@@ -36,19 +36,33 @@ static char	**init_cmd_args(t_list **lst, t_shell *data)
 	int		count_args;
 	char	**args;
 	int		i;
+	int		j;
+	char 	*token;
 
 	i = 0;
+	j = 0;
 	count_args = args_counter(*lst);
 	args = malloc((sizeof(char *) * count_args) + 1);
 	if (!args)
 		return (NULL);
-	memset(args, '\0', sizeof(char *) * count_args + 1);
+	ft_memset(args, '\0', sizeof(char *) * count_args + 1);
 	while (i < count_args)
 	{
-		(*lst)->content = parse_line((*lst)->content, data);
-		args[i] = ft_strdup((*lst)->content);
-		(*lst) = (*lst)->next;
-		i++;
+		token = (*lst)->content;
+		if (*token == '<' || *token == '>')
+		{
+			ft_init_file(*lst, data->cmd, data);
+			(*lst) = (*lst)->next->next;
+			i++;
+		}
+		else
+		{
+			(*lst)->content = parse_line((*lst)->content, data, -1);
+			args[j] = ft_strdup((*lst)->content);
+			(*lst) = (*lst)->next;
+			i++;
+			j++;
+		}
 	}
 	args[i] = NULL;
 	return (args);
@@ -57,10 +71,11 @@ static char	**init_cmd_args(t_list **lst, t_shell *data)
 static void	init_command(t_list **lst, t_shell *data, int i)
 {
 	data->cmd[i].cmd = ft_strdup((*lst)->content);
-	data->cmd[i].cmd = parse_line(data->cmd[i].cmd, data);
-	data->cmd[i].arguments = init_cmd_args(lst, data);
+	data->cmd[i].cmd = parse_line(data->cmd[i].cmd, data, -1);
+	data->cmd[i].args = init_cmd_args(lst, data);
 }
 
+/** Fill the cmnd structures with the token content **/
 int	init_cmd(t_list *lst, t_shell *mini)
 {
 	int		i;
@@ -72,12 +87,7 @@ int	init_cmd(t_list *lst, t_shell *mini)
 		token = lst->content;
 		if (!token)
 			return (1);
-		if (*token == '<' || *token == '>')
-		{
-			ft_init_file(lst, &(mini->cmd[i]), mini);
-			lst = lst->next->next;
-		}
-		else if (*token == '|')
+		if (*token == '|')
 		{
 			i++;
 			lst = lst->next;
