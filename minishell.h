@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/02 14:13:52 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/06 13:04:45 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 typedef struct s_redir{
 	char	*name;
 	char	mode;
+	int		idx;
 }				t_redir;
 
 typedef struct s_cmnd{
@@ -102,7 +103,7 @@ int		len_quotes(char *line, int i);
 int		is_end(int c);
 t_list	*get_tokens(char *line, t_list *token);
 int		init_cmd(t_list *lst, t_shell *mini);
-void	ft_init_file(t_list *lst, t_cmnd *cmd, t_shell *data);
+void	ft_init_file(t_list *lst, t_cmnd *cmd, t_shell *data, int idx);
 int		is_builtin(t_shell *data, int num_cmd);
 int		execute_builtin(t_shell *data, int num_cmd);
 
@@ -113,14 +114,14 @@ void	free_shell(t_shell *mini);
 void	ft_free_arr(char **arr);
 
 /** PROCESS **/
-void	ft_close_fd(int *fd[2], t_shell *data);
+void	ft_close_fd(int *fd[2], t_shell *data, int i);
 int		ft_create_pipe(int **fd, t_shell *data);
-int		ft_process_manager(t_shell *data, int i);
-int		ft_redir(t_cmnd *cmd, t_list *lst);
+int		ft_process_manager(pid_t	*id, t_shell *data, char **envp, int i);
+int		ft_redir(t_cmnd *cmd, t_list *lst, int i);
 void	ft_dup_fd(int i, int **fd, t_shell *data);
 
 /** EXEC **/
-int		ft_executer(t_shell *data, int ret);
+int		ft_executer(t_shell *data);
 int		ft_no_file_dir(int fd, char *name);
 char	*join_path(char *cmd, char **path, t_shell *dt);
 int		set_exit_status(int exit_status);

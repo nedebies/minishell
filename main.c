@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/01 23:01:40 by odan             ###   ########.fr       */
+/*   Updated: 2022/09/06 01:38:08 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	ft_prompt(int ac, t_shell *shell)
 			add_history(str);
 			if (!parser(str, shell))
 			{
-				ft_executer(shell, 0);
+				ft_executer(shell);
 				free_shell(shell);
 			}
 		}

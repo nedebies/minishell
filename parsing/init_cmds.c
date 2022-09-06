@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 17:55:36 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/02 13:16:45 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/06 11:59:52 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	args_counter(t_list *lst)
 	return (count);
 }
 
-static char	**init_cmd_args(t_list **lst, t_shell *data)
+static char	**init_cmd_args(t_list **lst, t_shell *data, int idx)
 {
 	int		count_args;
 	char	**args;
@@ -51,7 +51,7 @@ static char	**init_cmd_args(t_list **lst, t_shell *data)
 		token = (*lst)->content;
 		if (*token == '<' || *token == '>')
 		{
-			ft_init_file(*lst, data->cmd, data);
+			ft_init_file(*lst, data->cmd, data, idx);
 			(*lst) = (*lst)->next->next;
 			i++;
 		}
@@ -72,7 +72,7 @@ static void	init_command(t_list **lst, t_shell *data, int i)
 {
 	data->cmd[i].cmd = ft_strdup((*lst)->content);
 	data->cmd[i].cmd = parse_line(data->cmd[i].cmd, data, -1);
-	data->cmd[i].args = init_cmd_args(lst, data);
+	data->cmd[i].args = init_cmd_args(lst, data, i);
 }
 
 /** Fill the cmnd structures with the token content **/

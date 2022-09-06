@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 17:55:53 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/01 23:04:14 by odan             ###   ########.fr       */
+/*   Updated: 2022/09/06 13:09:03 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,32 +81,32 @@ static void	ft_check_fd(t_cmnd *cmd, t_redir **rd, t_list *lst)
 }
 
 /** Check if the redir are going in a existing file. If not, create it **/
-int	ft_redir(t_cmnd *cmd, t_list *lst)
+int	ft_redir(t_cmnd *cmd, t_list *lst, int i)
 {
 	t_redir	*rd;
 
 	while (lst)
 	{
 		ft_check_fd(cmd, &rd, lst);
-		if (rd->mode == MODE_READ)
+		if (rd->mode == MODE_READ && i == rd->idx)
 			cmd->in_file = open(rd->name, O_RDONLY);
-		else if (rd->mode == MODE_WRITE)
+		else if (rd->mode == MODE_WRITE && i == rd->idx)
 			cmd->out_file = open(rd->name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (rd->mode == MODE_APPEND)
+		else if (rd->mode == MODE_APPEND && i == rd->idx)
 			cmd->out_file = open(rd->name, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else if (rd->mode == MODE_HEREDOC)
+		else if (rd->mode == MODE_HEREDOC && i == rd->idx)
 			heredoc(cmd, rd->name);
+		lst = lst->next;
 		if (ft_no_file_dir(cmd->in_file, rd->name))
 			return (1);
 		else if (ft_no_file_dir(cmd->out_file, rd->name))
 			return (1);
-		lst = lst->next;
 	}
 	return (0);
 }
 
 /** Check the redir type to set the redir struct **/
-void	ft_init_file(t_list *lst, t_cmnd *cmd, t_shell *data)
+void	ft_init_file(t_list *lst, t_cmnd *cmd, t_shell *data, int idx)
 {
 	char	*file;
 	t_redir	*redir;
@@ -127,5 +127,9 @@ void	ft_init_file(t_list *lst, t_cmnd *cmd, t_shell *data)
 	else if (!ft_strncmp(lst->content, "<", 2))
 		redir->mode = MODE_READ;
 	redir->name = ft_strdup(file);
+	if (redir->mode > 0)
+		redir->idx = idx;
+	else
+		redir->idx = -1;
 	ft_lstadd_back(&cmd->redir, ft_lstnew(redir));
 }

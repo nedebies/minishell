@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_executer_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 17:52:21 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/02 14:27:38 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/06 01:48:54 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ char	*join_path(char *cmd, char **path, t_shell *dt)
 	return (cmd);
 }
 
-void	ft_close_fd(int *fd[2], t_shell *data)
+void	ft_close_fd(int *fd[2], t_shell *data, int c)
 {
 	int	i;
 
@@ -95,8 +95,11 @@ void	ft_close_fd(int *fd[2], t_shell *data)
 		close(fd[i][1]);
 		i++;
 	}
-	i = 0;
-	while (i < data->count_cmd - 1)
-		free(fd[i++]);
-	free(fd);
+	if (c == data->count_cmd - 1)
+	{
+		i = 0;
+		while (i < data->count_cmd - 1)
+			free(fd[i++]);
+		free(fd);
+	}
 }

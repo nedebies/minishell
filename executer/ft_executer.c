@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 14:28:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/02 16:36:13 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/06 12:55:53 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,22 @@
 
 void	ft_dup_fd(int i, int **fd, t_shell *data)
 {
-	if (i != 0)
-		dup2(fd[i - 1][0], STDIN_FILENO);
-	if (data->cmd[i].in_file)
-	{
-		dup2(data->cmd[i].in_file, STDIN_FILENO);
-		close(data->cmd[i].in_file);
-	}
 	if (data->cmd[i].out_file)
 	{
 		dup2(data->cmd[i].out_file, STDOUT_FILENO);
 		close(data->cmd[i].out_file);
 	}
-	if (i != data->count_cmd -1)
+	else if (i < data->count_cmd - 1)
 		dup2(fd[i][1], STDOUT_FILENO);
-	ft_close_fd(fd, data);
+	if (data->cmd[i].in_file)
+	{
+		dup2(data->cmd[i].in_file, STDIN_FILENO);
+		close(data->cmd[i].in_file);
+	}
+	else if (i != 0)
+		dup2(fd[i - 1][0], STDIN_FILENO);
+
+	ft_close_fd(fd, data, i);
 }
 
 static char	**ft_get_path(t_shell *data)
@@ -41,7 +42,7 @@ static char	**ft_get_path(t_shell *data)
 	return (path);
 }
 
-static int	cmd_with_path(t_shell *dt, char **envp, char **path)
+static int	cmd_with_path(t_shell *dt, char **path)
 {
 	int		i;
 
@@ -59,36 +60,26 @@ static int	cmd_with_path(t_shell *dt, char **envp, char **path)
 				return (-1);
 			}
 			dt->cmd[i].cmd = join_path(dt->cmd[i].cmd, path, dt);
-			if (!dt->cmd[i].cmd)
-			{
-				ft_free_arr(path);
-				ft_free_arr(envp);
-				return (-1);
-			}
 		}
 		i++;
 	}
 	return (0);
 }
 
-int	ft_executer(t_shell *data, int ret)
+int	ft_executer(t_shell *data)
 {
+	pid_t	*id;
 	char	**path;
 	char	**envp;
 
 	envp = get_envp(data->envp_list);
 	path = ft_get_path(data);
-	if (!data->cmd[0].cmd)
-	{
-		ret = ft_redir(&data->cmd[0], data->cmd[0].redir);
-		ft_print_error(data, NULL, ret);
-	}
-	else
-	{
-		if (cmd_with_path(data, envp, path) == -1)
-			return (-1);
-		ft_process_manager(data, -1);
-	}
+	cmd_with_path(data, path);
+	id = malloc(sizeof(pid_t) * data->count_cmd);
+	if (!id)
+		return (-1);
+	ft_process_manager(id, data, envp, -1);
+	free(id);
 	if (path)
 		ft_free_arr(path);
 	ft_free_arr(envp);
