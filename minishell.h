@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:30:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/06 13:04:45 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/06 16:51:55 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ char	*parse_line(char *line, t_shell *data, int i);
 int		len_quotes(char *line, int i);
 int		is_end(int c);
 t_list	*get_tokens(char *line, t_list *token);
+void	init_each_command(t_list **lst, t_shell *data, int i);
 int		init_cmd(t_list *lst, t_shell *mini);
 void	ft_init_file(t_list *lst, t_cmnd *cmd, t_shell *data, int idx);
 int		is_builtin(t_shell *data, int num_cmd);

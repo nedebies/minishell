@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pre_parser.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: orandan <orandan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/24 23:16:40 by orandan           #+#    #+#             */
-/*   Updated: 2022/08/31 20:05:01 by orandan          ###   ########.fr       */
+/*   Updated: 2022/09/06 16:07:20 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char	*print_er(char *error)
 	return (NULL);
 }
 
-static char	*ft_check_sign(char *line, char quotes,	int *cnt, t_shell *mini)
+static char	*ft_check_sign(char *line, char quotes,	int *cnt, t_shell *shell)
 {
 	if (*line == '\'' || *line == '\"')
 	{
@@ -62,7 +62,7 @@ static char	*ft_check_sign(char *line, char quotes,	int *cnt, t_shell *mini)
 		if (*line == '|')
 		{
 			print_er("`|'");
-			mini->exit_code = 258;
+			shell->exit_code = 258;
 			return (NULL);
 		}
 	}
@@ -71,7 +71,7 @@ static char	*ft_check_sign(char *line, char quotes,	int *cnt, t_shell *mini)
 	return (line);
 }
 
-int	pre_parse(char *line, t_shell *mini)
+int	pre_parse(char *line, t_shell *shell)
 {
 	char	quotes;
 	int		count_cmd;
@@ -79,20 +79,20 @@ int	pre_parse(char *line, t_shell *mini)
 	count_cmd = 1;
 	if (check_empty_line(line))
 	{
-		mini->exit_code = 0;
+		shell->exit_code = 0;
 		return (-1);
 	}
 	while (*line)
 	{
 		quotes = '0';
-		line = ft_check_sign(line, quotes, &count_cmd, mini);
+		line = ft_check_sign(line, quotes, &count_cmd, shell);
 		if (!line)
 			return (-1);
 	}
 	if (*(line - 1) == '|' || *(line - 1) == '<' || *(line - 1) == '>')
 	{
 		print_er("`newline'");
-		mini->exit_code = 258;
+		shell->exit_code = 258;
 		return (-1);
 	}
 	return (count_cmd);

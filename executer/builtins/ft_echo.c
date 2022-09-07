@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:33:56 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/01 22:08:57 by odan             ###   ########.fr       */
+/*   Updated: 2022/09/06 14:03:40 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	ft_add_flag(char **args)
 		if (ft_is_flag_echo(args[i]))
 			c++;
 		else
-			break;
+			break ;
 		i++;
 	}
 	return (c);

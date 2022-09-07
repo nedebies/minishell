@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:38:59 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/01 20:09:31 by odan             ###   ########.fr       */
+/*   Updated: 2022/09/06 14:06:27 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,10 @@ void	ft_unset(t_shell *data, int num_cmd)
 		if (ft_is_valid_token_unset(data->cmd[num_cmd].args[i]))
 			ft_unset_var_env(&data->envp_list, data->cmd[num_cmd].args[i++]);
 		else
-			printf("not-bash: unset: `%s': not a valid identifier\n", data->cmd[num_cmd].args[i++]);
+		{
+			printf("not-bash: unset: `%s': ", data->cmd[num_cmd].args[i++]);
+			printf("not a valid identifier\n");
+		}
 	}
 	return ;
 }

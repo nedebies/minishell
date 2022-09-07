@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 14:15:13 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/31 13:47:51 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/06 16:06:21 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,17 +77,17 @@ void	free_cmd(t_cmnd *cmd)
 	free_redir(cmd);
 }
 
-void	free_shell(t_shell *mini)
+void	free_shell(t_shell *shell)
 {
 	int	i;
 
 	i = 0;
-	while (i < mini->count_cmd)
+	while (i < shell->count_cmd)
 	{
-		free_cmd(mini->cmd + i);
+		free_cmd(shell->cmd + i);
 		i++;
 	}
-	mini->count_cmd = 0;
-	free(mini->cmd);
-	mini->cmd = NULL;
+	shell->count_cmd = 0;
+	free(shell->cmd);
+	shell->cmd = NULL;
 }

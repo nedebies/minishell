@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:41:01 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/01 21:45:14 by odan             ###   ########.fr       */
+/*   Updated: 2022/09/06 14:09:03 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static long int	ft_argtoi(char const *str)
 
 	countneg = 1;
 	integ = 0;
-
 	if (*str == '-')
 	{
 		countneg = -1;
@@ -38,12 +37,12 @@ static long int	ft_argtoi(char const *str)
 	}
 	return ((long int)integ * countneg);
 }
-  
+
 static int	ft_isnumber(char *str)
 {
 	int				i;
 	long long int	num;
-	
+
 	i = 0;
 	if (str && (*str == '-' || *str == '+'))
 		i++;
@@ -61,18 +60,17 @@ static int	ft_isnumber(char *str)
 
 static void	ft_return_error_isnum(t_shell *data, int num_cmd, int i)
 {
-    printf("exit\nnot-bash: exit: %s : numeric argument required\n", \
-            data->cmd[num_cmd].args[i]);
-    data->exit_code = 255;
-    exit (255);
+	printf("exit\nnot-bash: exit: %s : ", data->cmd[num_cmd].args[i]);
+	printf("numeric argument required\n");
+	data->exit_code = 255;
+	exit (255);
 }
 
 static void	ft_set_retcode(t_shell *data, int num_cmd)
 {
 	long long int	num;
-	
-	num = ft_argtoi(data->cmd[num_cmd].args[1]);
 
+	num = ft_argtoi(data->cmd[num_cmd].args[1]);
 	ft_print_error(data, NULL, (unsigned char)num);
 }
 

@@ -6,11 +6,31 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 14:28:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/06 12:55:53 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/06 16:55:02 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	ft_close_fd(int *fd[2], t_shell *data, int c)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->count_cmd - 1)
+	{
+		close(fd[i][0]);
+		close(fd[i][1]);
+		i++;
+	}
+	if (c == data->count_cmd - 1)
+	{
+		i = 0;
+		while (i < data->count_cmd - 1)
+			free(fd[i++]);
+		free(fd);
+	}
+}
 
 void	ft_dup_fd(int i, int **fd, t_shell *data)
 {
@@ -28,7 +48,6 @@ void	ft_dup_fd(int i, int **fd, t_shell *data)
 	}
 	else if (i != 0)
 		dup2(fd[i - 1][0], STDIN_FILENO);
-
 	ft_close_fd(fd, data, i);
 }
 
@@ -72,16 +91,24 @@ int	ft_executer(t_shell *data)
 	char	**path;
 	char	**envp;
 
-	envp = get_envp(data->envp_list);
-	path = ft_get_path(data);
-	cmd_with_path(data, path);
-	id = malloc(sizeof(pid_t) * data->count_cmd);
-	if (!id)
-		return (-1);
-	ft_process_manager(id, data, envp, -1);
-	free(id);
-	if (path)
-		ft_free_arr(path);
-	ft_free_arr(envp);
+	if (!data->cmd[0].cmd)
+	{
+		if (ft_redir(&data->cmd[0], data->cmd->redir, 0))
+			return (0);
+	}
+	else
+	{
+		envp = get_envp(data->envp_list);
+		path = ft_get_path(data);
+		cmd_with_path(data, path);
+		id = malloc(sizeof(pid_t) * data->count_cmd);
+		if (!id)
+			return (-1);
+		ft_process_manager(id, data, envp, -1);
+		free(id);
+		if (path)
+			ft_free_arr(path);
+		ft_free_arr(envp);
+	}
 	return (0);
 }

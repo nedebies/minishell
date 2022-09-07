@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_executer_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.s19.be>         +#+  +:+       +#+        */
+/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 17:52:21 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/06 01:48:54 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/06 16:57:30 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,8 @@ static char	*error_path(t_shell *dt, char *command, char *tmp, char *cmd)
 	return (NULL);
 }
 
-char	*join_path(char *cmd, char **path, t_shell *dt)
+static char	*pre_join_path(char *cmd)
 {
-	int		i;
-	char	*tmp;
-	char	*command;
-
-	i = 0;
 	if (!cmd)
 		return (NULL);
 	if (access(cmd, X_OK) == 0)
@@ -66,6 +61,18 @@ char	*join_path(char *cmd, char **path, t_shell *dt)
 		ft_no_file_dir(-1, cmd);
 		return (NULL);
 	}
+	return (cmd);
+}
+
+char	*join_path(char *cmd, char **path, t_shell *dt)
+{
+	int		i;
+	char	*tmp;
+	char	*command;
+
+	i = 0;
+	if (!pre_join_path(cmd))
+		return (NULL);
 	if (access(cmd, X_OK) != 0 && access(cmd, F_OK) == 0 && ft_strchr(cmd, '/'))
 		return (permission_error(cmd, dt));
 	command = ft_strdup(cmd);
@@ -82,24 +89,4 @@ char	*join_path(char *cmd, char **path, t_shell *dt)
 	free(command);
 	free(tmp);
 	return (cmd);
-}
-
-void	ft_close_fd(int *fd[2], t_shell *data, int c)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->count_cmd - 1)
-	{
-		close(fd[i][0]);
-		close(fd[i][1]);
-		i++;
-	}
-	if (c == data->count_cmd - 1)
-	{
-		i = 0;
-		while (i < data->count_cmd - 1)
-			free(fd[i++]);
-		free(fd);
-	}
 }
