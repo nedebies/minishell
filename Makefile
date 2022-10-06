@@ -38,6 +38,7 @@ SRCS	=	main.c \
 			./libft/ft_isalpha.c \
 			./libft/ft_memset.c \
 			./libft/ft_lstnew.c \
+			./libft/ft_strtrim.c \
 			./libft/ft_lstadd_back.c \
 			./libft/ft_lstclear.c \
 			./libft/ft_lstsize.c \
@@ -60,13 +61,12 @@ HEADER	= minishell.h
 RM := rm -rf
 OBJ_FILES := $(SRCS:.c=.o)
 
-
 all: $(NAME)
 
 $(NAME): $(OBJ_FILES)
 		@$(CC) $(CFLAGS) $(OBJ_FILES) $(READLINE) -o $(NAME)
-		@echo "Minishell compiled\n"
-		@echo "Simply type ./minishell to execute the program. Enjoy.\n\n"
+		@echo "Minishell compiled"
+		@echo "Simply type ./minishell to execute the program. Enjoy."
 
 clean:
 	@rm -f $(OBJ_FILES)

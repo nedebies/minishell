@@ -3,25 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   parse_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdony <hdony@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 17:55:08 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/31 14:03:07 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/23 11:20:47 by hdony            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	put_in_mid_line(char **line, char *str, int start, int end)
+/* remove quotes & join before & after quotes
+** make *line points to the newly joined line
+*/
+static int	remove_quotes(char **line, char *mid, int start, int end)
 {
 	char	*head;
 	char	*tail;
 	char	*tmp;
 
 	head = ft_substr(*line, 0, start);
-	tail = ft_substr(*line, end + 1, ft_strlen(*line) - end - 1);
+	if (!ft_strncmp(*line, "$\"$", 3))
+		tail = ft_substr(*line, end + 2, ft_strlen(*line) - end - 1);
+	else
+		tail = ft_substr(*line, end + 1, ft_strlen(*line) - end - 1);
 	free(*line);
-	*line = ft_strjoin(head, str);
+	*line = ft_strjoin(head, mid);
 	tmp = ft_strdup(*line);
 	free(*line);
 	*line = ft_strjoin(tmp, tail);
@@ -31,7 +37,10 @@ static int	put_in_mid_line(char **line, char *str, int start, int end)
 	return (0);
 }
 
-static int	dollar(char **line, int start, t_shell *data)
+/* check if $ followed by char & if is_end is FALSE
+** expand the env var. or return -1
+*/
+static int	dollar(char **line, int start, t_shell *data, int flag)
 {
 	int		i;
 	char	*str;
@@ -48,10 +57,16 @@ static int	dollar(char **line, int start, t_shell *data)
 		return (-1);
 	}
 	free(tmp);
-	put_in_mid_line(line, str, start, start + i);
+	if (flag)
+		*line -= 1;
+	remove_quotes(line, str, start, start + i);
 	return (1);
 }
 
+/* loop over line, break if find closing quote
+** if add $ within quotes, dollar(), if $ is not expanded,
+move to next char, ignore $
+ */
 static	int	del_quotes(char **line, int start, t_shell *data, int flag)
 {
 	char	quotes;
@@ -64,8 +79,9 @@ static	int	del_quotes(char **line, int start, t_shell *data, int flag)
 	{
 		if ((*line)[end] == '$' && quotes == '\"')
 		{
-			if (dollar(line, end, data) == -1)
+			if (dollar(line, end, data, flag) == -1)
 				end++;
+			flag = 0;
 		}
 		else if ((*line)[end] == quotes)
 			break ;
@@ -75,11 +91,12 @@ static	int	del_quotes(char **line, int start, t_shell *data, int flag)
 	mid = ft_substr(*line, start + 1, end - start - 1);
 	if (flag)
 		*line -= 1;
-	put_in_mid_line(line, mid, start, end);
+	remove_quotes(line, mid, start, end);
 	free(mid);
 	return (end - 2);
 }
 
+/* move *line after $ */
 static int	dollar_quotes(char **line, int start, t_shell *data)
 {
 	int	i;
@@ -90,10 +107,14 @@ static int	dollar_quotes(char **line, int start, t_shell *data)
 	return (i);
 }
 
-/** Deal with metachar (quotes and $) in the line **/
+/* param line is (*lst)->content
+** parse $"" & $''
+** parse "" & ''
+** parse $
+ */
 char	*parse_line(char *line, t_shell *data, int i)
 {
-	if (!*line)
+	if (!line)
 		return (NULL);
 	while (line[++i])
 	{
@@ -111,7 +132,7 @@ char	*parse_line(char *line, t_shell *data, int i)
 		}
 		else if (line[i] == '$')
 		{
-			i = dollar(&line, i, data);
+			i = dollar(&line, i, data, 0);
 			if (i == -1)
 				break ;
 		}

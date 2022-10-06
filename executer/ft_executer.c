@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_executer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdony <hdony@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 14:28:29 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/06 16:55:02 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/23 17:57:58 by hdony            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_close_fd(int *fd[2], t_shell *data, int c)
+void	ft_close_fd(int *fd[2], t_shell *data)
 {
 	int	i;
 
@@ -23,13 +23,13 @@ void	ft_close_fd(int *fd[2], t_shell *data, int c)
 		close(fd[i][1]);
 		i++;
 	}
-	if (c == data->count_cmd - 1)
+	i = 0;
+	while (i < data->count_cmd - 1)
 	{
-		i = 0;
-		while (i < data->count_cmd - 1)
-			free(fd[i++]);
-		free(fd);
+		free(fd[i]);
+		i++;
 	}
+	free(fd);
 }
 
 void	ft_dup_fd(int i, int **fd, t_shell *data)
@@ -47,8 +47,12 @@ void	ft_dup_fd(int i, int **fd, t_shell *data)
 		close(data->cmd[i].in_file);
 	}
 	else if (i != 0)
+	{
+		if (heredoc_excep(data->cmd->redir, i))
+			return ;
 		dup2(fd[i - 1][0], STDIN_FILENO);
-	ft_close_fd(fd, data, i);
+	}
+	ft_close_fd(fd, data);
 }
 
 static char	**ft_get_path(t_shell *data)

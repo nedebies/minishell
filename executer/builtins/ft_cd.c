@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 12:35:59 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/06 17:50:40 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/07 12:03:26 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ static int	no_home_err(t_shell *sh)
 
 static int	check_no_home(t_shell *d, int num_cmd)
 {
-	if (!ft_getenv(d->envp_list, "HOME"))
+	if (ft_getenv(d->envp_list, "HOME"))
+		ft_putenv(&d->envp_list, "OLDPWD", ft_getenv(d->envp_list, "PWD"));
+	else if (!ft_getenv(d->envp_list, "HOME"))
 	{
 		if (!ft_strlen(d->cmd[num_cmd].args[1]))
 			return (1);

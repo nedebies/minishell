@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 17:55:53 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/06 15:02:18 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/07 18:36:16 by odan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/** PIPEX BONUS PART **/
 static int	read_heredoc(const char *end, int *fd)
 {
 	char	*line;
@@ -34,7 +33,6 @@ static int	read_heredoc(const char *end, int *fd)
 	exit(EXIT_SUCCESS);
 }
 
-/** PIPEX BONUS PART **/
 static int	heredoc(t_cmnd *cmd, const char *end_file)
 {
 	int				fd[2];
@@ -64,7 +62,6 @@ static int	heredoc(t_cmnd *cmd, const char *end_file)
 	return (0);
 }
 
-/** Check the redir rights of the processes according to their fd **/
 static void	ft_check_fd(t_cmnd *cmd, t_redir **rd, t_list *lst)
 {
 	*rd = lst->content;
@@ -80,7 +77,6 @@ static void	ft_check_fd(t_cmnd *cmd, t_redir **rd, t_list *lst)
 	}
 }
 
-/** Check if the redir are going in a existing file. If not, create it **/
 int	ft_redir(t_cmnd *cmd, t_list *lst, int i)
 {
 	t_redir	*rd;
@@ -105,7 +101,6 @@ int	ft_redir(t_cmnd *cmd, t_list *lst, int i)
 	return (0);
 }
 
-/** Check the redir type to set the redir struct **/
 void	ft_init_file(t_list *lst, t_cmnd *cmd, t_shell *data, int idx)
 {
 	char	*file;

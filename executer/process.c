@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 23:47:01 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/06 15:55:58 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/07 17:15:55 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ static void	process(t_shell *data, char **envp, int i, int **fd)
 	if (is_builtin(data, i))
 		execute_builtin(data, i);
 	else if (execve(data->cmd[i].cmd, data->cmd[i].args, envp) == -1)
-		data->exit_code = 126;
-	exit(EXIT_SUCCESS);
+		exit(data->exit_code);
+	exit(data->exit_code);
 }
 
 int	ft_create_pipe(int **fd, t_shell *data)
@@ -96,7 +96,7 @@ int	ft_process_manager(pid_t	*id, t_shell *data, char **envp, int i)
 		if (id[i] == 0)
 			process(data, envp, i, fd);
 	}
-	ft_close_fd(fd, data, i);
+	ft_close_fd(fd, data);
 	ft_wait_process(id, data);
 	return (0);
 }

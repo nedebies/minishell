@@ -3,14 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdony <hdony@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:27:18 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/06 16:21:51 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/23 17:59:30 by hdony            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	heredoc_excep(t_list *lst, int i)
+{
+	t_redir	*redir;
+	int		j;
+
+	j = 1;
+	while (lst)
+	{
+		redir = lst->content;
+		if (j == i && redir->mode == 4)
+			return (1);
+		lst = lst->next;
+		j++;
+	}
+	return (0);
+}
+
+int	args_counter(t_list *lst)
+{
+	int		count;
+	char	*token;
+
+	count = 0;
+	while (lst)
+	{
+		token = lst->content;
+		if (*token == '<' || *token == '>')
+			count = count - 1;
+		if (*token == '|')
+			break ;
+		lst = lst->next;
+		count++;
+	}
+	return (count);
+}
 
 void	ft_exit_minishell(t_shell *data)
 {
@@ -29,6 +65,7 @@ static void	ft_prompt(int ac, t_shell *shell)
 	{
 		set_input_signals();
 		str = readline("not-bash> ");
+		str = ft_strtrim(str, " ");
 		signal(SIGINT, &signal_handler2);
 		if (!str)
 		{
@@ -38,7 +75,6 @@ static void	ft_prompt(int ac, t_shell *shell)
 		}
 		if (ft_strlen(str))
 		{
-			add_history(str);
 			if (!parser(str, shell))
 			{
 				ft_executer(shell);

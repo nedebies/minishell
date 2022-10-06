@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_executer_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdony <hdony@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 17:52:21 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/06 16:57:30 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/23 11:06:49 by hdony            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,21 @@ static char	*error_path(t_shell *dt, char *command, char *tmp, char *cmd)
 	return (NULL);
 }
 
-static char	*pre_join_path(char *cmd)
+static char	*pre_join_path(char *cmd, t_shell *dt)
 {
 	if (!cmd)
+	{
+		dt->exit_code = 127;
+		ft_putstr_fd("not-bash: ", 2);
+		ft_putstr_fd("command not found\n", 2);
 		return (NULL);
-	if (access(cmd, X_OK) == 0)
-		return (cmd);
+	}
+	if (access(cmd, X_OK) != 0 && access(cmd, F_OK) == 0 && ft_strchr(cmd, '/'))
+		return (permission_error(cmd, dt));
 	if (access(cmd, F_OK) != 0 && ft_strchr(cmd, '/'))
 	{
 		ft_no_file_dir(-1, cmd);
+		dt->exit_code = 127;
 		return (NULL);
 	}
 	return (cmd);
@@ -71,10 +77,10 @@ char	*join_path(char *cmd, char **path, t_shell *dt)
 	char	*command;
 
 	i = 0;
-	if (!pre_join_path(cmd))
+	if (access(cmd, X_OK) == 0)
+		return (cmd);
+	if (!pre_join_path(cmd, dt))
 		return (NULL);
-	if (access(cmd, X_OK) != 0 && access(cmd, F_OK) == 0 && ft_strchr(cmd, '/'))
-		return (permission_error(cmd, dt));
 	command = ft_strdup(cmd);
 	tmp = ft_strjoin("/", cmd);
 	free(cmd);

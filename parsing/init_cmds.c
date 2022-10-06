@@ -3,33 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   init_cmds.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hdony <hdony@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/26 17:55:36 by nedebies          #+#    #+#             */
-/*   Updated: 2022/09/06 16:51:55 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/23 11:18:09 by hdony            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-static int	args_counter(t_list *lst)
-{
-	int		count;
-	char	*token;
-
-	count = 0;
-	while (lst)
-	{
-		token = lst->content;
-		if (*token == '<' || *token == '>')
-			count = count - 1;
-		if (*token == '|')
-			break ;
-		lst = lst->next;
-		count++;
-	}
-	return (count);
-}
 
 static char	**set_args(int count_args)
 {
@@ -72,23 +53,58 @@ static char	**init_cmd_args(t_list **lst, t_shell *data, int idx, int j)
 	return (args);
 }
 
-static char	*set_wrong_cmd(char *s)
+static int	is_builtin_ll(char *token)
 {
-	free(s);
-	return (ft_strdup(""));
+	if (token == NULL)
+		return (0);
+	if (ft_strncmp(token, "cd", 2) == 0)
+		return (1);
+	else if (ft_strncmp(token, "pwd", 3) == 0)
+		return (2);
+	else if (ft_strncmp(token, "PWD", 3) == 0)
+		return (2);
+	else if (ft_strncmp(token, "echo", 4) == 0)
+		return (2);
+	else if (ft_strncmp(token, "env", 3) == 0)
+		return (2);
+	else if (ft_strncmp(token, "ENV", 3) == 0)
+		return (2);
+	else if (ft_strncmp(token, "exit", 4) == 0)
+		return (1);
+	else if (ft_strncmp(token, "unset", 5) == 0)
+		return (1);
+	else if (ft_strncmp(token, "export", 6) == 0)
+		return (1);
+	return (0);
+}
+
+static char	*find_cmd(t_list *lst)
+{
+	char	*token;
+
+	while (lst != NULL)
+	{
+		token = lst->content;
+		if (is_builtin_ll(token) != 0)
+			return (token);
+		lst = lst->next;
+	}
+	return (NULL);
 }
 
 void	init_each_command(t_list **lst, t_shell *data, int i)
 {
-	data->cmd[i].cmd = ft_strdup((*lst)->content);
-	data->cmd[i].cmd = parse_line(data->cmd[i].cmd, data, -1);
-	if (!ft_strncmp(data->cmd[i].cmd, ">>", 2))
-		data->cmd[i].cmd = set_wrong_cmd(data->cmd[i].cmd);
-	else if (!ft_strncmp(data->cmd[i].cmd, "<<", 2))
-		data->cmd[i].cmd = set_wrong_cmd(data->cmd[i].cmd);
-	else if (!ft_strncmp(data->cmd[i].cmd, ">", 1))
-		data->cmd[i].cmd = set_wrong_cmd(data->cmd[i].cmd);
-	else if (!ft_strncmp(data->cmd[i].cmd, "<", 1))
-		data->cmd[i].cmd = set_wrong_cmd(data->cmd[i].cmd);
-	data->cmd[i].args = init_cmd_args(lst, data, i, 0);
+	if (!ft_strncmp((*lst)->content, ">", 1)
+		|| !ft_strncmp((*lst)->content, "<", 1))
+	{
+		data->cmd[i].cmd = ft_strdup(find_cmd(*lst));
+		data->cmd[i].cmd = parse_line(data->cmd[i].cmd, data, -1);
+		data->cmd[i].args = init_cmd_args(lst, data, i, 0);
+	}
+	else
+	{
+		data->cmd[i].cmd = ft_strdup((*lst)->content);
+		data->cmd[i].cmd = parse_line(data->cmd[i].cmd, data, -1);
+		data->cmd[i].args = init_cmd_args(lst, data, i, 0);
+	}
 }

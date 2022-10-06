@@ -6,7 +6,7 @@
 /*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 10:29:34 by nedebies          #+#    #+#             */
-/*   Updated: 2022/08/31 13:42:23 by nedebies         ###   ########.fr       */
+/*   Updated: 2022/09/07 11:52:53 by nedebies         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ t_list	*ft_init_env(t_shell *data, char **env)
 	ls_envp_list = NULL;
 	while (env && env[i])
 		ls_envp_list = ft_add2list(ls_envp_list, env[i++]);
-	ft_unset_var_env(&ls_envp_list, "OLDPWD");
 	if (!ls_envp_list || !i)
 	{
 		ft_print_error(data, "env list failed", 1);

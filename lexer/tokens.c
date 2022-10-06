@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nedebies <nedebies@student.42.fr>          +#+  +:+       +#+        */
+/*   By: odan <odan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/11 16:54:46 by hdony             #+#    #+#             */
-/*   Updated: 2022/08/31 13:41:17 by nedebies         ###   ########.fr       */
+/*   Created: 2022/09/07 15:53:31 by nedebies          #+#    #+#             */
+/*   Updated: 2022/09/07 18:35:57 by odan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ static int	len_token(char *line, int i)
 	return (len);
 }
 
-/** Skip spaces in front of the line & lex the line into tokens **/
 t_list	*get_tokens(char *line, t_list *token)
 {
 	int		len;
@@ -73,5 +72,6 @@ t_list	*get_tokens(char *line, t_list *token)
 		ft_lstadd_back(&token, ft_lstnew(tmp));
 		i += len;
 	}
+	free (line);
 	return (token);
 }
